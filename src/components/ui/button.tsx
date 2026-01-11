@@ -12,10 +12,10 @@ const buttonVariants = cva(
         destructive:
           "bg-[hsl(0,84%,60%)] text-white shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px]",
         outline:
-          "bg-white shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[hsl(45,100%,90%)]",
+          "bg-white text-black shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] hover:bg-[hsl(45,100%,90%)]",
         secondary:
           "bg-[hsl(187,71%,54%)] text-black shadow-[3px_3px_0_0_#000] hover:shadow-[1px_1px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px]",
-        ghost: "hover:bg-[hsl(45,100%,90%)] border-transparent",
+        ghost: "text-black hover:bg-[hsl(45,100%,90%)] border-transparent",
         link: "text-[hsl(340,82%,59%)] underline-offset-4 hover:underline border-transparent",
         memphis: "bg-[hsl(45,100%,60%)] text-black shadow-[4px_4px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[2px] hover:translate-y-[2px] border-4",
       },
