@@ -238,7 +238,7 @@ export default function Header({ videoRef }: HeaderProps) {
             <select
               value={captureScale}
               onChange={(e) => setCaptureScale(Number(e.target.value) as 1 | 2)}
-              className="h-9 border-2 border-black bg-white px-3 text-sm font-bold shadow-[2px_2px_0_0_#000]"
+              className="h-9 border-2 border-black bg-white text-black px-3 text-sm font-bold shadow-[2px_2px_0_0_#000]"
             >
               <option value={1}>1x 원본</option>
               <option value={2}>2x 업스케일</option>
@@ -276,7 +276,7 @@ export default function Header({ videoRef }: HeaderProps) {
               </TooltipTrigger>
               <TooltipContent>축소</TooltipContent>
             </Tooltip>
-            <span className="font-bold min-w-[50px] text-center text-sm bg-white border-2 border-black px-2 py-1">{Math.round(zoom * 100)}%</span>
+            <span className="font-bold min-w-[50px] text-center text-sm bg-white text-black border-2 border-black px-2 py-1">{Math.round(zoom * 100)}%</span>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

@@ -75,10 +75,10 @@ export default function Transport() {
         </div>
 
         {/* 시간 표시 */}
-        <div className="px-3 py-1.5 bg-white border-2 border-black font-mono text-sm font-bold shadow-[2px_2px_0_0_#000]">
+        <div className="px-3 py-1.5 bg-white border-2 border-black font-mono text-sm font-bold shadow-[2px_2px_0_0_#000] text-black">
           <span>{formatTime(currentTime)}</span>
-          <span className="mx-2 text-gray-400">/</span>
-          <span className="text-gray-500">{formatTime(projectDuration)}</span>
+          <span className="mx-2 text-gray-500">/</span>
+          <span className="text-gray-600">{formatTime(projectDuration)}</span>
         </div>
 
         {/* 시크바 */}
