@@ -34,10 +34,10 @@ export default function VideoClipComponent({ clip, pixelsPerSecond, onDragStart 
   return (
     <div
       className={cn(
-        "absolute cursor-move transition-all touch-none h-[70px] sm:h-[100px] rounded-md overflow-hidden border shadow-sm",
+        "absolute cursor-move transition-all touch-none h-[70px] sm:h-[100px] overflow-hidden border-3 border-black",
         isSelected
-          ? "ring-2 ring-primary ring-offset-2 z-10 border-primary"
-          : "border-border hover:border-primary/50"
+          ? "ring-4 ring-[hsl(45,100%,60%)] z-10 shadow-[4px_4px_0_0_hsl(45,100%,60%)]"
+          : "shadow-[3px_3px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px]"
       )}
       style={{
         left: clipLeft,
@@ -47,8 +47,8 @@ export default function VideoClipComponent({ clip, pixelsPerSecond, onDragStart 
       onMouseDown={handleMouseDown}
       onTouchStart={handleTouchStart}
     >
-      {/* Clip background (thumbnail strip) */}
-      <div className="w-full h-full bg-primary/10 overflow-hidden flex">
+      {/* 클립 배경 (썸네일 스트립) */}
+      <div className="w-full h-full bg-[hsl(340,82%,59%)] overflow-hidden flex">
         {clip.thumbnails.map((thumb, idx) => (
           <div
             key={idx}
@@ -65,24 +65,24 @@ export default function VideoClipComponent({ clip, pixelsPerSecond, onDragStart 
         ))}
       </div>
 
-      {/* Clip name */}
+      {/* 클립 이름 */}
       <div className="absolute top-1 left-2 right-2">
-        <span className="text-xs font-medium bg-background/90 text-foreground px-2 py-0.5 rounded truncate block max-w-full">
+        <span className="text-xs font-bold bg-white text-black px-2 py-0.5 border border-black truncate block max-w-full">
           {clip.name}
         </span>
       </div>
 
-      {/* Trim handle - left */}
+      {/* 트림 핸들 - 왼쪽 */}
       <div
-        className="absolute left-0 top-0 bottom-0 w-2 bg-foreground/20 cursor-ew-resize hover:bg-primary transition-colors"
+        className="absolute left-0 top-0 bottom-0 w-3 bg-black cursor-ew-resize hover:bg-[hsl(45,100%,60%)] transition-colors"
         onMouseDown={(e) => {
           e.stopPropagation()
         }}
       />
 
-      {/* Trim handle - right */}
+      {/* 트림 핸들 - 오른쪽 */}
       <div
-        className="absolute right-0 top-0 bottom-0 w-2 bg-foreground/20 cursor-ew-resize hover:bg-primary transition-colors"
+        className="absolute right-0 top-0 bottom-0 w-3 bg-black cursor-ew-resize hover:bg-[hsl(45,100%,60%)] transition-colors"
         onMouseDown={(e) => {
           e.stopPropagation()
         }}

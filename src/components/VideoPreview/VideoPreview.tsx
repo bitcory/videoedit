@@ -1,7 +1,6 @@
 import { useEffect, useRef, forwardRef, useImperativeHandle, useCallback } from 'react'
 import { useProjectStore } from '../../store/projectStore'
 import { usePlaybackStore } from '../../store/playbackStore'
-import { Card } from '@/components/ui/card'
 
 interface VideoPreviewProps {}
 
@@ -101,9 +100,16 @@ const VideoPreview = forwardRef<HTMLVideoElement, VideoPreviewProps>((_, ref) =>
 
   if (clips.length === 0) {
     return (
-      <Card className="flex items-center justify-center w-full max-w-2xl aspect-video bg-muted">
-        <p className="text-muted-foreground text-base sm:text-lg font-medium">Upload a video to get started</p>
-      </Card>
+      <div className="flex items-center justify-center w-full max-w-2xl aspect-video bg-[hsl(271,76%,53%)] border-4 border-black shadow-[6px_6px_0_0_#000]">
+        <div className="text-center">
+          <div className="flex justify-center gap-2 mb-4">
+            <div className="w-8 h-8 bg-[hsl(340,82%,59%)] border-2 border-black rotate-12" />
+            <div className="w-6 h-6 bg-[hsl(45,100%,60%)] border-2 border-black -rotate-6" />
+            <div className="w-7 h-7 bg-[hsl(187,71%,54%)] border-2 border-black rotate-3" />
+          </div>
+          <p className="text-white text-base sm:text-lg font-bold">비디오를 업로드해주세요</p>
+        </div>
+      </div>
     )
   }
 
@@ -111,7 +117,7 @@ const VideoPreview = forwardRef<HTMLVideoElement, VideoPreviewProps>((_, ref) =>
     return (
       <video
         ref={internalRef}
-        className="max-w-full max-h-[50vh] sm:max-h-[60vh] bg-black rounded-lg"
+        className="max-w-full max-h-[50vh] sm:max-h-[60vh] bg-black border-4 border-black shadow-[6px_6px_0_0_#000]"
         playsInline
       />
     )
@@ -121,7 +127,7 @@ const VideoPreview = forwardRef<HTMLVideoElement, VideoPreviewProps>((_, ref) =>
     <video
       ref={internalRef}
       src={activeClip.videoUrl}
-      className="max-w-full max-h-[50vh] sm:max-h-[60vh] rounded-lg shadow-lg"
+      className="max-w-full max-h-[50vh] sm:max-h-[60vh] border-4 border-black shadow-[6px_6px_0_0_#000]"
       onTimeUpdate={handleTimeUpdate}
       playsInline
     />

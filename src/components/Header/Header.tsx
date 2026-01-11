@@ -57,7 +57,7 @@ export default function Header({ videoRef }: HeaderProps) {
 
         addClip(clip)
       } catch (err) {
-        console.error('Failed to load video:', err)
+        console.error('비디오 로드 실패:', err)
       }
     }
 
@@ -95,8 +95,8 @@ export default function Header({ videoRef }: HeaderProps) {
       a.click()
       URL.revokeObjectURL(url)
     } catch (err) {
-      console.error('Export failed:', err)
-      alert('Export failed')
+      console.error('내보내기 실패:', err)
+      alert('내보내기에 실패했습니다')
     } finally {
       setIsExporting(false)
       setExportProgress(0)
@@ -121,8 +121,8 @@ export default function Header({ videoRef }: HeaderProps) {
       a.click()
       URL.revokeObjectURL(url)
     } catch (err) {
-      console.error('Audio extraction failed:', err)
-      alert('Audio extraction failed')
+      console.error('오디오 추출 실패:', err)
+      alert('오디오 추출에 실패했습니다')
     } finally {
       setIsExporting(false)
       setExportProgress(0)
@@ -144,15 +144,19 @@ export default function Header({ videoRef }: HeaderProps) {
 
   return (
     <TooltipProvider>
-      <header className="bg-background border-b p-2 sm:p-3 relative z-50">
+      <header className="bg-[hsl(45,100%,60%)] border-b-4 border-black p-2 sm:p-3 relative z-50">
         <div className="flex items-center justify-between gap-2 sm:gap-3 flex-wrap">
-          {/* Logo */}
+          {/* 로고 */}
           <div className="flex items-center gap-2">
-            <h1 className="text-lg sm:text-xl font-bold text-foreground">VIDEO EDIT</h1>
+            <div className="flex items-center gap-1">
+              <div className="w-8 h-8 bg-[hsl(340,82%,59%)] border-2 border-black rotate-12" />
+              <div className="w-6 h-6 bg-[hsl(187,71%,54%)] border-2 border-black -rotate-6 -ml-3" />
+            </div>
+            <h1 className="text-lg sm:text-xl font-black text-black tracking-tight">TB 비디오에디터</h1>
             <ThemeToggle />
           </div>
 
-          {/* File operations */}
+          {/* 파일 작업 */}
           <div className="flex items-center gap-1 sm:gap-2">
             <input
               ref={fileInputRef}
@@ -171,14 +175,14 @@ export default function Header({ videoRef }: HeaderProps) {
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <Upload className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Upload</span>
+                  <span className="hidden sm:inline">업로드</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Upload video</TooltipContent>
+              <TooltipContent>비디오 업로드</TooltipContent>
             </Tooltip>
           </div>
 
-          {/* Edit operations */}
+          {/* 편집 작업 */}
           <div className="flex items-center gap-1 sm:gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -190,10 +194,10 @@ export default function Header({ videoRef }: HeaderProps) {
                   disabled={!selectedClipId}
                 >
                   <Scissors className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Split</span>
+                  <span className="hidden sm:inline">분할</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Split clip at playhead</TooltipContent>
+              <TooltipContent>재생헤드 위치에서 클립 분할</TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -206,10 +210,10 @@ export default function Header({ videoRef }: HeaderProps) {
                   disabled={!selectedClipId}
                 >
                   <Trash2 className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Delete</span>
+                  <span className="hidden sm:inline">삭제</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Delete selected clip</TooltipContent>
+              <TooltipContent>선택한 클립 삭제</TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -222,22 +226,22 @@ export default function Header({ videoRef }: HeaderProps) {
                   disabled={clips.length < 2}
                 >
                   <AlignLeft className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Align</span>
+                  <span className="hidden sm:inline">정렬</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Remove gaps between clips</TooltipContent>
+              <TooltipContent>클립 사이 빈 공간 제거</TooltipContent>
             </Tooltip>
           </div>
 
-          {/* Frame capture - hidden on mobile */}
+          {/* 프레임 캡처 - 모바일 숨김 */}
           <div className="hidden md:flex items-center gap-2">
             <select
               value={captureScale}
               onChange={(e) => setCaptureScale(Number(e.target.value) as 1 | 2)}
-              className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+              className="h-9 border-2 border-black bg-white px-3 text-sm font-bold shadow-[2px_2px_0_0_#000]"
             >
-              <option value={1}>1x Original</option>
-              <option value={2}>2x Upscale</option>
+              <option value={1}>1x 원본</option>
+              <option value={2}>2x 업스케일</option>
             </select>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -249,14 +253,14 @@ export default function Header({ videoRef }: HeaderProps) {
                   disabled={clips.length === 0}
                 >
                   <Camera className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden lg:inline">Capture</span>
+                  <span className="hidden lg:inline">캡처</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Save current frame as image</TooltipContent>
+              <TooltipContent>현재 프레임을 이미지로 저장</TooltipContent>
             </Tooltip>
           </div>
 
-          {/* Zoom controls - simplified on mobile */}
+          {/* 줌 컨트롤 - 모바일 간소화 */}
           <div className="hidden sm:flex items-center gap-1 sm:gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -270,9 +274,9 @@ export default function Header({ videoRef }: HeaderProps) {
                   <ZoomOut className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Zoom out</TooltipContent>
+              <TooltipContent>축소</TooltipContent>
             </Tooltip>
-            <span className="font-medium min-w-[50px] text-center text-sm">{Math.round(zoom * 100)}%</span>
+            <span className="font-bold min-w-[50px] text-center text-sm bg-white border-2 border-black px-2 py-1">{Math.round(zoom * 100)}%</span>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -285,11 +289,11 @@ export default function Header({ videoRef }: HeaderProps) {
                   <ZoomIn className="h-4 w-4" />
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Zoom in</TooltipContent>
+              <TooltipContent>확대</TooltipContent>
             </Tooltip>
           </div>
 
-          {/* Export */}
+          {/* 내보내기 */}
           <div className="flex items-center gap-1 sm:gap-2">
             <Tooltip>
               <TooltipTrigger asChild>
@@ -301,11 +305,11 @@ export default function Header({ videoRef }: HeaderProps) {
                   disabled={clips.length === 0 || isExporting}
                 >
                   <Film className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">{isExporting ? `${Math.round(exportProgress)}%` : 'Export'}</span>
+                  <span className="hidden sm:inline">{isExporting ? `${Math.round(exportProgress)}%` : '내보내기'}</span>
                   {isExporting && <span className="sm:hidden text-xs">{Math.round(exportProgress)}%</span>}
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Export video</TooltipContent>
+              <TooltipContent>비디오 내보내기</TooltipContent>
             </Tooltip>
 
             <Tooltip>
@@ -318,10 +322,10 @@ export default function Header({ videoRef }: HeaderProps) {
                   disabled={clips.length === 0 || isExporting}
                 >
                   <Music className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Audio</span>
+                  <span className="hidden sm:inline">오디오</span>
                 </Button>
               </TooltipTrigger>
-              <TooltipContent>Extract audio</TooltipContent>
+              <TooltipContent>오디오 추출</TooltipContent>
             </Tooltip>
           </div>
         </div>

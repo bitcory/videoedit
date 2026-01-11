@@ -29,26 +29,26 @@ export default function Transport() {
   }
 
   return (
-    <div className="bg-muted border-t p-2 sm:p-3">
+    <div className="bg-[hsl(340,82%,59%)] border-t-4 border-black p-2 sm:p-3">
       <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-center sm:justify-start">
-        {/* Playback controls */}
+        {/* 재생 컨트롤 */}
         <div className="flex items-center gap-1 sm:gap-2">
           <Button
             variant="outline"
             size="icon"
             className="h-8 w-8 sm:h-9 sm:w-9"
             onClick={handleSkipBack}
-            title="Skip back 5s"
+            title="5초 뒤로"
           >
             <SkipBack className="h-4 w-4" />
           </Button>
 
           <Button
-            variant="default"
+            variant="memphis"
             size="icon"
             className="h-10 w-10 sm:h-11 sm:w-11"
             onClick={togglePlay}
-            title={isPlaying ? 'Pause' : 'Play'}
+            title={isPlaying ? '일시정지' : '재생'}
           >
             {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
           </Button>
@@ -58,7 +58,7 @@ export default function Transport() {
             size="icon"
             className="h-8 w-8 sm:h-9 sm:w-9"
             onClick={stop}
-            title="Stop"
+            title="정지"
           >
             <Square className="h-4 w-4" />
           </Button>
@@ -68,20 +68,20 @@ export default function Transport() {
             size="icon"
             className="h-8 w-8 sm:h-9 sm:w-9"
             onClick={handleSkipForward}
-            title="Skip forward 5s"
+            title="5초 앞으로"
           >
             <SkipForward className="h-4 w-4" />
           </Button>
         </div>
 
-        {/* Time display */}
-        <div className="px-3 py-1.5 rounded-md bg-background border font-mono text-sm">
-          <span className="font-semibold">{formatTime(currentTime)}</span>
-          <span className="mx-2 text-muted-foreground">/</span>
-          <span className="text-muted-foreground">{formatTime(projectDuration)}</span>
+        {/* 시간 표시 */}
+        <div className="px-3 py-1.5 bg-white border-2 border-black font-mono text-sm font-bold shadow-[2px_2px_0_0_#000]">
+          <span>{formatTime(currentTime)}</span>
+          <span className="mx-2 text-gray-400">/</span>
+          <span className="text-gray-500">{formatTime(projectDuration)}</span>
         </div>
 
-        {/* Seek bar */}
+        {/* 시크바 */}
         <div className="flex-1 min-w-[120px] sm:min-w-[200px] order-last sm:order-none w-full sm:w-auto mt-2 sm:mt-0">
           <Slider
             min={0}
@@ -93,12 +93,12 @@ export default function Transport() {
           />
         </div>
 
-        {/* Volume controls - desktop */}
+        {/* 볼륨 컨트롤 - 데스크탑 */}
         <div className="hidden sm:flex items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
-            className="h-9 w-9"
+            className="h-9 w-9 text-white hover:text-black"
             onClick={() => setVolume(volume > 0 ? 0 : 1)}
           >
             {volume > 0 ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
@@ -111,14 +111,14 @@ export default function Transport() {
             onValueChange={([value]) => setVolume(value)}
             className="w-24"
           />
-          <span className="text-sm font-medium w-10">{Math.round(volume * 100)}%</span>
+          <span className="text-sm font-bold text-white w-10">{Math.round(volume * 100)}%</span>
         </div>
 
-        {/* Mobile volume button */}
+        {/* 모바일 볼륨 버튼 */}
         <Button
           variant="ghost"
           size="icon"
-          className="sm:hidden h-8 w-8"
+          className="sm:hidden h-8 w-8 text-white"
           onClick={() => setVolume(volume > 0 ? 0 : 1)}
         >
           {volume > 0 ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}

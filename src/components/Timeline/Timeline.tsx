@@ -13,7 +13,7 @@ export default function Timeline() {
   const { isDragging, draggedClipId, dragStartX, dragStartTime, startDrag, endDrag } = useDragStore()
   const [isPlayheadDragging, setIsPlayheadDragging] = useState(false)
 
-  // Ctrl/Cmd + Scroll = Zoom, Alt + Scroll = Horizontal scroll
+  // Ctrl/Cmd + 스크롤 = 줌, Alt + 스크롤 = 가로 스크롤
   const handleWheel = useCallback((e: WheelEvent) => {
     const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0
     const isZoomModifier = isMac ? e.metaKey : e.ctrlKey
@@ -56,8 +56,8 @@ export default function Timeline() {
           className="absolute top-0 flex flex-col"
           style={{ left: i * pixelsPerSecond + 8 }}
         >
-          <div className="w-0.5 h-3 bg-foreground/40" />
-          <span className="text-xs text-muted-foreground ml-1">{i}s</span>
+          <div className="w-0.5 h-3 bg-black" />
+          <span className="text-xs font-bold text-black ml-1">{i}초</span>
         </div>
       )
     }
@@ -218,32 +218,32 @@ export default function Timeline() {
   }, [isPlayheadDragging, pixelsPerSecond, projectDuration, setCurrentTime])
 
   return (
-    <div className="bg-muted/50 border-t relative">
+    <div className="bg-[hsl(187,71%,54%)] border-t-4 border-black relative">
       <div
         ref={trackAreaRef}
         className="overflow-x-auto overflow-y-hidden"
         onClick={handleTimelineClick}
       >
         <div style={{ width: timelineWidth, minWidth: '100%' }}>
-          {/* Ruler */}
-          <div className="h-8 bg-secondary/50 border-b relative">
+          {/* 눈금자 */}
+          <div className="h-8 bg-[hsl(45,100%,80%)] border-b-2 border-black relative">
             {generateRulerMarks()}
           </div>
 
-          {/* Track area */}
-          <div className="relative bg-muted h-[100px] sm:h-[140px]">
-            {/* Grid lines */}
+          {/* 트랙 영역 */}
+          <div className="relative bg-[hsl(187,71%,74%)] h-[100px] sm:h-[140px]">
+            {/* 그리드 라인 */}
             <div className="absolute inset-0 pointer-events-none">
               {Array.from({ length: Math.ceil(projectDuration) }).map((_, i) => (
                 <div
                   key={i}
-                  className="absolute top-0 bottom-0 w-px bg-border/50"
+                  className="absolute top-0 bottom-0 w-px bg-black/20"
                   style={{ left: i * pixelsPerSecond + 8 }}
                 />
               ))}
             </div>
 
-            {/* Video clips */}
+            {/* 비디오 클립들 */}
             <div className="absolute top-3 sm:top-4 h-[70px] sm:h-[100px]" style={{ left: 8 }}>
               {clips.map(clip => (
                 <VideoClipComponent
@@ -255,22 +255,22 @@ export default function Timeline() {
               ))}
             </div>
 
-            {/* Playhead */}
+            {/* 재생헤드 */}
             <div
               className="absolute top-0 bottom-0 z-20 cursor-ew-resize group touch-none"
               style={{ left: playheadPosition - 20, width: 40 }}
               onMouseDown={handlePlayheadMouseDown}
               onTouchStart={handlePlayheadTouchStart}
             >
-              <div className="absolute left-[19px] top-0 bottom-0 w-0.5 bg-destructive" />
-              <div className="absolute left-[11px] -top-1 w-5 h-5 bg-destructive transform rotate-45" />
+              <div className="absolute left-[19px] top-0 bottom-0 w-1 bg-[hsl(0,84%,60%)]" />
+              <div className="absolute left-[12px] -top-1 w-5 h-5 bg-[hsl(0,84%,60%)] border-2 border-black transform rotate-45" />
             </div>
 
-            {/* Empty state */}
+            {/* 빈 상태 */}
             {clips.length === 0 && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <p className="text-muted-foreground font-medium text-sm sm:text-base px-4 text-center bg-background/70 py-2 rounded-md">
-                  Upload or drag a video to get started
+                <p className="text-black font-bold text-sm sm:text-base px-4 text-center bg-white/80 py-2 border-2 border-black shadow-[2px_2px_0_0_#000]">
+                  비디오를 업로드하거나 드래그해서 추가하세요
                 </p>
               </div>
             )}

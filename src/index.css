@@ -4,48 +4,57 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Memphis UI Colors - Bold and Playful */
+    --background: 60 100% 97%;
+    --foreground: 0 0% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 0 0% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
-    --radius: 0.5rem;
+    --popover-foreground: 0 0% 10%;
+    --primary: 340 82% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 187 71% 54%;
+    --secondary-foreground: 0 0% 10%;
+    --muted: 45 100% 90%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 271 76% 53%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 340 82% 59%;
+    --radius: 0px;
+
+    /* Memphis specific colors */
+    --memphis-pink: 340 82% 59%;
+    --memphis-yellow: 45 100% 60%;
+    --memphis-cyan: 187 71% 54%;
+    --memphis-purple: 271 76% 53%;
+    --memphis-orange: 25 95% 60%;
+    --memphis-green: 150 60% 50%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    --background: 240 10% 10%;
+    --foreground: 60 100% 97%;
+    --card: 240 10% 15%;
+    --card-foreground: 60 100% 97%;
+    --popover: 240 10% 15%;
+    --popover-foreground: 60 100% 97%;
+    --primary: 340 82% 59%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 187 71% 44%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 10% 20%;
+    --muted-foreground: 0 0% 70%;
+    --accent: 271 76% 53%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 40%;
+    --input: 0 0% 40%;
+    --ring: 340 82% 59%;
   }
 }
 
@@ -65,29 +74,60 @@
   }
 }
 
-/* Custom scrollbar */
+/* Memphis UI Components */
+@layer components {
+  .memphis-btn {
+    @apply font-bold border-4 border-black transition-all duration-100;
+    box-shadow: 4px 4px 0 0 #000;
+  }
+  .memphis-btn:hover {
+    box-shadow: 2px 2px 0 0 #000;
+    transform: translate(2px, 2px);
+  }
+  .memphis-btn:active {
+    box-shadow: none;
+    transform: translate(4px, 4px);
+  }
+
+  .memphis-card {
+    @apply border-4 border-black bg-white;
+    box-shadow: 6px 6px 0 0 #000;
+  }
+
+  .memphis-pattern {
+    background-image:
+      radial-gradient(circle, #000 1px, transparent 1px),
+      radial-gradient(circle, #000 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+  }
+}
+
+/* Custom scrollbar - Memphis style */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-muted;
+  background: hsl(var(--muted));
+  border: 2px solid #000;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-muted-foreground/30 rounded-full;
+  background: hsl(var(--primary));
+  border: 2px solid #000;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-muted-foreground/50;
+  background: hsl(var(--accent));
 }
 
 /* Mobile optimizations */
 @media (max-width: 640px) {
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
   }
 
   .touch-none {
