@@ -16,9 +16,9 @@ export default function Transport() {
   }
 
   return (
-    <div className="bg-[#0d0d0d] border-t border-white/10 px-2 py-1.5 sm:p-3 safe-area-bottom">
+    <div className="bg-background/80 backdrop-blur-xl border-t border-white/[0.06] px-3 py-2 sm:px-4 sm:py-2.5 safe-area-bottom">
       {/* 시크바 - 모바일에서 상단 배치 */}
-      <div className="mb-1.5 sm:hidden">
+      <div className="mb-2 sm:hidden">
         <Slider
           min={0}
           max={duration || 100}
@@ -29,23 +29,22 @@ export default function Transport() {
         />
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-4">
+      <div className="flex items-center gap-2 sm:gap-3">
         {/* 재생 컨트롤 */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <Button
-            variant="memphis"
+            variant="default"
             size="icon"
-            className="h-10 w-10 sm:h-11 sm:w-11"
             onClick={togglePlay}
             title={isPlaying ? '일시정지' : '재생'}
           >
-            {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
+            {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
           </Button>
 
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8 sm:h-9 sm:w-9"
+            className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg"
             onClick={stop}
             title="정지"
           >
@@ -54,10 +53,10 @@ export default function Transport() {
         </div>
 
         {/* 시간 표시 */}
-        <div className="px-2 sm:px-3 py-1 sm:py-1.5 bg-[#1a1a1a] border border-white/20 font-mono text-xs sm:text-sm font-bold shadow-[2px_2px_0_0_rgba(255,255,255,0.1)] text-white whitespace-nowrap">
-          <span>{formatTime(currentTime)}</span>
-          <span className="mx-1 sm:mx-2 text-white/30">/</span>
-          <span className="text-white/50">{formatTime(duration)}</span>
+        <div className="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] font-mono text-xs sm:text-sm font-medium text-foreground/80 whitespace-nowrap">
+          <span className="text-foreground">{formatTime(currentTime)}</span>
+          <span className="mx-1.5 text-white/20">/</span>
+          <span className="text-muted-foreground">{formatTime(duration)}</span>
         </div>
 
         {/* 시크바 - 데스크탑 */}
@@ -80,7 +79,7 @@ export default function Transport() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-9 w-9 text-white/70 hover:text-white"
+            className="h-9 w-9"
             onClick={() => setVolume(volume > 0 ? 0 : 1)}
           >
             {volume > 0 ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
@@ -93,14 +92,14 @@ export default function Transport() {
             onValueChange={([value]) => setVolume(value)}
             className="w-24"
           />
-          <span className="text-sm font-bold text-white/70 w-10">{Math.round(volume * 100)}%</span>
+          <span className="text-xs font-medium text-muted-foreground w-10">{Math.round(volume * 100)}%</span>
         </div>
 
         {/* 모바일 볼륨 버튼 */}
         <Button
           variant="ghost"
           size="icon"
-          className="sm:hidden h-10 w-10 text-white/70 active:text-white"
+          className="sm:hidden h-10 w-10"
           onClick={() => setVolume(volume > 0 ? 0 : 1)}
         >
           {volume > 0 ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}

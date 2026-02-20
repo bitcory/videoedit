@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Upload } from 'lucide-react'
+import { Upload, Film } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface UploadPromptProps {
@@ -32,23 +32,23 @@ export default function UploadPrompt({ onFileSelected }: UploadPromptProps) {
   return (
     <div className="flex-1 flex items-center justify-center p-4 sm:p-8">
       <div
-        className={`w-full max-w-lg border-2 border-dashed p-6 sm:p-12 text-center transition-colors ${
+        className={`w-full max-w-lg rounded-2xl border-2 border-dashed p-8 sm:p-12 text-center transition-all duration-300 ${
           isDragOver
-            ? 'border-white bg-white/10'
-            : 'border-white/30 hover:border-white/50'
+            ? 'border-indigo-400/60 bg-indigo-500/[0.08] scale-[1.01]'
+            : 'border-white/[0.12] hover:border-white/[0.2] hover:bg-white/[0.02]'
         }`}
         onDragOver={(e) => { e.preventDefault(); setIsDragOver(true) }}
         onDragLeave={() => setIsDragOver(false)}
         onDrop={handleDrop}
       >
-        <div className="flex justify-center gap-2 mb-4 sm:mb-6">
-          <div className="w-8 h-8 sm:w-10 sm:h-10 bg-white border border-white/30 rotate-12" />
-          <div className="w-6 h-6 sm:w-8 sm:h-8 bg-[#333] border border-white/20 -rotate-6" />
-          <div className="w-7 h-7 sm:w-9 sm:h-9 bg-[#222] border border-white/20 rotate-3" />
+        <div className="flex justify-center mb-6">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl gradient-primary flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <Film className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+          </div>
         </div>
 
-        <h2 className="text-lg sm:text-xl font-black text-white mb-1 sm:mb-2">영상을 업로드하세요</h2>
-        <p className="text-xs sm:text-sm text-white/50 font-bold mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-bold text-foreground mb-2">영상을 업로드하세요</h2>
+        <p className="text-xs sm:text-sm text-muted-foreground mb-6 sm:mb-8">
           드래그 & 드롭 또는 버튼을 클릭하세요
         </p>
 
@@ -70,7 +70,7 @@ export default function UploadPrompt({ onFileSelected }: UploadPromptProps) {
           파일 선택
         </Button>
 
-        <p className="text-[10px] sm:text-xs text-white/30 font-bold mt-3 sm:mt-4">
+        <p className="text-[10px] sm:text-xs text-muted-foreground/60 mt-4 sm:mt-6">
           MP4, WebM, MOV 등 지원
         </p>
       </div>

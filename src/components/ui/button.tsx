@@ -3,25 +3,31 @@ import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
+const defaultInnerSize = {
+  default: "px-4 py-2 text-sm",
+  sm: "px-3 py-1.5 text-xs",
+  lg: "px-8 py-2.5",
+  icon: "p-2",
+}
+
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap text-sm font-bold transition-all duration-100 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border border-white/20",
+  "inline-flex items-center justify-center whitespace-nowrap text-sm font-semibold rounded-lg transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-white text-black shadow-[2px_2px_0_0_rgba(255,255,255,0.15)] hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.15)] hover:translate-x-[1px] hover:translate-y-[1px] active:shadow-none active:translate-x-[2px] active:translate-y-[2px]",
+        default: "",
         destructive:
-          "bg-[#333] text-white shadow-[2px_2px_0_0_rgba(255,255,255,0.15)] hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.15)] hover:translate-x-[1px] hover:translate-y-[1px]",
+          "bg-destructive text-destructive-foreground shadow-lg shadow-red-500/20 hover:shadow-xl hover:shadow-red-500/25 hover:scale-[1.02] active:scale-[0.98]",
         outline:
-          "bg-[#1a1a1a] text-white shadow-[2px_2px_0_0_rgba(255,255,255,0.15)] hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.15)] hover:translate-x-[1px] hover:translate-y-[1px] hover:bg-[#222]",
+          "border border-white/[0.12] bg-white/[0.04] text-foreground hover:bg-white/[0.08] hover:border-white/[0.18] active:scale-[0.98]",
         secondary:
-          "bg-[#222] text-white shadow-[2px_2px_0_0_rgba(255,255,255,0.15)] hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.15)] hover:translate-x-[1px] hover:translate-y-[1px]",
-        ghost: "text-white hover:bg-white/10 border-transparent",
-        link: "text-white underline-offset-4 hover:underline border-transparent",
-        memphis: "bg-white text-black shadow-[3px_3px_0_0_rgba(255,255,255,0.15)] hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.15)] hover:translate-x-[2px] hover:translate-y-[2px] border-2 border-white/30",
+          "bg-secondary text-secondary-foreground border border-white/[0.08] hover:bg-secondary/80 hover:border-white/[0.14] active:scale-[0.98]",
+        ghost: "text-foreground/70 hover:text-foreground hover:bg-white/[0.06] rounded-lg",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-9 px-3",
+        sm: "h-9 px-3 text-xs",
         lg: "h-11 px-8",
         icon: "h-10 w-10",
       },
@@ -40,8 +46,34 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, children, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
+    const resolvedVariant = variant ?? 'default'
+    const resolvedSize = size ?? 'default'
+
+    // 그라디언트 글로우 버튼 (default variant)
+    if (resolvedVariant === 'default' && !asChild) {
+      return (
+        <Comp
+          className={cn(
+            "group relative rounded-lg bg-gradient-to-br from-indigo-500 to-fuchsia-500 p-0.5 transition-all duration-300 hover:scale-110 active:scale-95 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 btn-glow",
+            className
+          )}
+          ref={ref}
+          {...props}
+        >
+          <span
+            className={cn(
+              "flex items-center justify-center gap-1.5 rounded-md bg-slate-950 font-semibold text-slate-100 transition-colors duration-300 group-hover:bg-slate-950/50 group-hover:text-white group-active:bg-slate-950/80",
+              defaultInnerSize[resolvedSize]
+            )}
+          >
+            {children}
+          </span>
+        </Comp>
+      )
+    }
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }))}

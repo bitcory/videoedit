@@ -5,7 +5,7 @@ interface WaveformDisplayProps {
   color?: string
 }
 
-export default function WaveformDisplay({ blob, color = '#ffffff' }: WaveformDisplayProps) {
+export default function WaveformDisplay({ blob, color = '#a78bfa' }: WaveformDisplayProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function WaveformDisplay({ blob, color = '#ffffff' }: WaveformDis
 
         ctx.clearRect(0, 0, w, h)
         ctx.fillStyle = color
-        ctx.globalAlpha = 0.6
+        ctx.globalAlpha = 0.5
 
         for (let x = 0; x < w; x++) {
           const start = x * step
@@ -58,13 +58,13 @@ export default function WaveformDisplay({ blob, color = '#ffffff' }: WaveformDis
   }, [blob, color])
 
   if (!blob) {
-    return <div className="w-full h-full bg-[#1a1a1a]" />
+    return <div className="w-full h-full rounded-md bg-white/[0.03]" />
   }
 
   return (
     <canvas
       ref={canvasRef}
-      className="w-full h-full bg-[#1a1a1a]"
+      className="w-full h-full rounded-md bg-white/[0.03]"
     />
   )
 }

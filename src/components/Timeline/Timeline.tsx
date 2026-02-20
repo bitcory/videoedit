@@ -48,15 +48,14 @@ export default function Timeline() {
           className="absolute top-0 flex flex-col"
           style={{ left: i * pixelsPerSecond + PADDING }}
         >
-          <div className="w-0.5 h-3 bg-white/40" />
-          <span className="text-[10px] sm:text-xs font-bold text-white/60 ml-1">{i}초</span>
+          <div className="w-px h-3 bg-white/20" />
+          <span className="text-[10px] sm:text-xs font-medium text-white/30 ml-1">{i}초</span>
         </div>
       )
     }
     return marks
   }
 
-  // 클릭/터치 → 시간 변환 (라벨 너비 고려)
   const getTimeFromClientX = useCallback((clientX: number) => {
     const trackArea = trackAreaRef.current
     if (!trackArea) return 0
@@ -106,17 +105,14 @@ export default function Timeline() {
     return null
   }
 
-  // 전체 스크롤 영역 너비 = 콘텐츠 + 여유 공간
   const scrollWidth = contentWidth + PADDING * 2
 
   return (
-    <div className="bg-[#141414] border-t border-white/10 relative flex-1 min-h-0">
+    <div className="bg-card/50 backdrop-blur-sm border-t border-white/[0.06] relative flex-1 min-h-0">
       <div className="flex h-full">
         {/* 고정 라벨 열 */}
-        <div className="flex-shrink-0 z-10 bg-[#1a1a1a]">
-          {/* 라벨 헤더 (눈금자 높이) */}
-          <div className="h-6 sm:h-8 border-b border-white/10" />
-          {/* 트랙 라벨 */}
+        <div className="flex-shrink-0 z-10 bg-card/80 backdrop-blur-sm">
+          <div className="h-6 sm:h-8 border-b border-white/[0.06]" />
           {tracks.map(track => (
             <TrackRow key={`label-${track.id}`} track={track} mode="label" />
           ))}
@@ -130,7 +126,7 @@ export default function Timeline() {
         >
           <div style={{ width: scrollWidth, minWidth: '100%' }}>
             {/* 눈금자 */}
-            <div className="h-6 sm:h-8 bg-[#1a1a1a] border-b border-white/10 relative">
+            <div className="h-6 sm:h-8 bg-card/60 border-b border-white/[0.06] relative">
               {generateRulerMarks()}
             </div>
 
@@ -147,13 +143,13 @@ export default function Timeline() {
                 onMouseDown={handlePlayheadStart}
                 onTouchStart={handlePlayheadStart}
               >
-                <div className="absolute left-[21px] top-0 bottom-0 w-0.5 bg-white shadow-[0_0_4px_rgba(255,255,255,0.5)]" />
-                <div className="absolute left-[14px] -top-1 w-[16px] h-[16px] bg-white border border-white/50 transform rotate-45" />
+                <div className="absolute left-[21px] top-0 bottom-0 w-0.5 bg-indigo-400 shadow-[0_0_8px_rgba(99,102,241,0.6)]" />
+                <div className="absolute left-[15px] -top-1 w-3.5 h-3.5 rounded-full gradient-primary shadow-lg shadow-indigo-500/40 ring-2 ring-indigo-300/30" />
               </div>
 
               {tracks.length === 0 && (
                 <div className="h-[80px] flex items-center justify-center">
-                  <p className="text-white/30 font-bold text-sm">트랙 없음</p>
+                  <p className="text-muted-foreground/50 text-sm">트랙 없음</p>
                 </div>
               )}
             </div>
@@ -161,8 +157,8 @@ export default function Timeline() {
         </div>
 
         {/* 고정 토글 열 */}
-        <div className="flex-shrink-0 z-10 bg-[#1a1a1a]">
-          <div className="h-6 sm:h-8 border-b border-white/10" />
+        <div className="flex-shrink-0 z-10 bg-card/80 backdrop-blur-sm">
+          <div className="h-6 sm:h-8 border-b border-white/[0.06]" />
           {tracks.map(track => (
             <TrackRow key={`toggle-${track.id}`} track={track} mode="toggle" />
           ))}

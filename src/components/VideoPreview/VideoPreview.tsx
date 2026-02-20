@@ -89,7 +89,7 @@ const VideoPreview = forwardRef<HTMLVideoElement>((_, ref) => {
       <video
         ref={internalRef}
         src={videoUrl}
-        className="w-full max-h-[35vh] sm:max-h-[50vh] object-contain border border-white/20 shadow-[4px_4px_0_0_rgba(255,255,255,0.1)]"
+        className="w-full max-h-[35vh] sm:max-h-[50vh] object-contain rounded-xl border border-white/[0.08] shadow-2xl shadow-black/40"
         muted
         playsInline
       />

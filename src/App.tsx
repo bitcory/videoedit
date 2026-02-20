@@ -166,7 +166,7 @@ function App() {
 
         {phase === 'uploading' && (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-white/50 font-bold">영상 준비 중...</p>
+            <p className="text-muted-foreground font-medium">영상 준비 중...</p>
           </div>
         )}
 
@@ -176,7 +176,7 @@ function App() {
 
         {(phase === 'ready' || phase === 'exporting') && (
           <>
-            <div className="flex-shrink-0 flex justify-center p-1 sm:p-4 bg-black/30">
+            <div className="flex-shrink-0 flex justify-center p-2 sm:p-4">
               <VideoPreview ref={videoRef} />
             </div>
             <Timeline />

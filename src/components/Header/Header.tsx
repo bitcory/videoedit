@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react'
-import { Upload, Download, Loader2 } from 'lucide-react'
+import { Upload, Download, Loader2, AudioWaveform } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { useProjectStore } from '../../store/projectStore'
 import { videoEngine } from '../../video/VideoEngine'
 import { getVideoMetadata, generateThumbnails, generateId } from '../../utils/videoUtils'
@@ -85,16 +84,16 @@ export default function Header() {
 
   return (
     <TooltipProvider>
-      <header className="bg-[#111] border-b border-white/10 px-2 py-1.5 sm:p-3 relative z-50 safe-area-top">
+      <header className="bg-background/80 backdrop-blur-xl border-b border-white/[0.06] px-3 py-2 sm:px-4 sm:py-2.5 relative z-50 safe-area-top">
         <div className="flex items-center justify-between gap-2">
           {/* 로고 */}
-          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
-            <div className="flex items-center gap-1 flex-shrink-0">
-              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white border border-white/30 rotate-12" />
-              <div className="w-4 h-4 sm:w-6 sm:h-6 bg-[#333] border border-white/20 -rotate-6 -ml-2 sm:-ml-3" />
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-indigo-500/20">
+              <AudioWaveform className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
-            <h1 className="text-sm sm:text-xl font-black text-white tracking-tight truncate">TB 음원분리</h1>
-            <ThemeToggle />
+            <h1 className="text-sm sm:text-lg font-bold text-foreground tracking-tight truncate">
+              TB <span className="gradient-text">음원분리</span>
+            </h1>
           </div>
 
           {/* 업로드 + 내보내기 */}
@@ -112,12 +111,11 @@ export default function Header() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-8 sm:h-9 px-2 sm:px-3"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={phase === 'separating' || isExporting}
                 >
-                  <Upload className="h-4 w-4 sm:mr-2" />
-                  <span className="hidden sm:inline">업로드</span>
+                  <Upload className="h-4 w-4" />
+                  <span className="hidden sm:inline ml-1.5">업로드</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>새 영상 업로드</TooltipContent>
@@ -129,18 +127,17 @@ export default function Header() {
                   <Button
                     variant="default"
                     size="sm"
-                    className="h-8 sm:h-9 px-2 sm:px-3"
                     onClick={handleExport}
                     disabled={isExporting}
                   >
                     {isExporting ? (
                       <>
-                        <Loader2 className="h-4 w-4 sm:mr-2 animate-spin" />
-                        <span className="text-xs sm:text-sm">{Math.round(exportProgress)}%</span>
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="text-xs">{Math.round(exportProgress)}%</span>
                       </>
                     ) : (
                       <>
-                        <Download className="h-4 w-4 sm:mr-2" />
+                        <Download className="h-4 w-4" />
                         <span className="hidden sm:inline">내보내기</span>
                       </>
                     )}
