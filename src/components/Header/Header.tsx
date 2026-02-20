@@ -8,7 +8,8 @@ import {
   ZoomOut,
   Music,
   Film,
-  AlignLeft
+  AlignLeft,
+  AudioWaveform
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -18,6 +19,8 @@ import { usePlaybackStore } from '../../store/playbackStore'
 import { videoEngine } from '../../video/VideoEngine'
 import { getVideoMetadata, generateThumbnails, generateId, captureFrame, downloadDataUrl } from '../../utils/videoUtils'
 import { VideoClip, ExportOptions } from '../../types'
+import { useStemStore } from '../../store/stemStore'
+import StemSeparationModal from '../StemSeparation/StemSeparationModal'
 
 interface HeaderProps {
   videoRef: React.RefObject<HTMLVideoElement | null>
@@ -30,6 +33,7 @@ export default function Header({ videoRef }: HeaderProps) {
   const [isExporting, setIsExporting] = useState(false)
   const [exportProgress, setExportProgress] = useState(0)
   const [captureScale, setCaptureScale] = useState<1 | 2>(1)
+  const { openModal: openStemModal } = useStemStore()
 
   const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -327,9 +331,26 @@ export default function Header({ videoRef }: HeaderProps) {
               </TooltipTrigger>
               <TooltipContent>오디오 추출</TooltipContent>
             </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="memphis"
+                  size="sm"
+                  onClick={openStemModal}
+                  disabled={clips.length === 0 || isExporting}
+                >
+                  <AudioWaveform className="h-4 w-4 sm:mr-2" />
+                  <span className="hidden sm:inline">음원 분리</span>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>AI로 보컬/반주 분리</TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </header>
+      <StemSeparationModal />
     </TooltipProvider>
   )
 }
