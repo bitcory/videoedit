@@ -51,10 +51,15 @@ function App() {
         if (cancelled) return
 
         // 2. FFmpeg로 오디오 추출 (30-40%)
-        setSeparationProgress(30, '비디오에서 오디오 추출 중...')
+        setSeparationProgress(30, 'FFmpeg 로딩 중...')
         if (!videoEngine.isLoaded()) {
-          await videoEngine.load()
+          await videoEngine.load((p) => {
+            if (cancelled) return
+            setSeparationProgress(30 + p * 0.05, 'FFmpeg 로딩 중...')
+          })
         }
+        if (cancelled) return
+        setSeparationProgress(35, '비디오에서 오디오 추출 중...')
         const audioBlob = await videoEngine.extractAudioFromFile(videoFile)
         if (cancelled) return
         setSeparationProgress(40, '오디오 추출 완료')
@@ -167,7 +172,10 @@ function App() {
 
         {phase === 'uploading' && (
           <div className="flex-1 flex items-center justify-center">
-            <p className="text-muted-foreground font-medium">영상 준비 중...</p>
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-12 h-12 rounded-full border-2 border-white/10 border-t-indigo-500 animate-spin" />
+              <p className="text-muted-foreground font-medium">영상 준비 중...</p>
+            </div>
           </div>
         )}
 

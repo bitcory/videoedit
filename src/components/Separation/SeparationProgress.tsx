@@ -5,9 +5,9 @@ export default function SeparationProgress() {
   const { separationProgress, separationMessage } = useProjectStore()
 
   const stageLabel = (() => {
-    if (separationProgress <= 30) return '1/4 모델 준비'
-    if (separationProgress <= 40) return '2/4 오디오 추출'
-    if (separationProgress <= 90) return '3/4 음원 분리'
+    if (separationProgress < 30) return '1/4 모델 준비'
+    if (separationProgress < 40) return '2/4 오디오 추출'
+    if (separationProgress < 90) return '3/4 음원 분리'
     return '4/4 인코딩'
   })()
 

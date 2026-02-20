@@ -1,4 +1,4 @@
-import { Play, Pause, Square, Volume2, VolumeX } from 'lucide-react'
+import { Play, Pause, Volume2, VolumeX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { usePlaybackStore } from '../../store/playbackStore'
@@ -6,7 +6,7 @@ import { useProjectStore } from '../../store/projectStore'
 import { formatTime } from '../../utils/videoUtils'
 
 export default function Transport() {
-  const { isPlaying, currentTime, volume, togglePlay, stop, setCurrentTime, setVolume } = usePlaybackStore()
+  const { isPlaying, currentTime, volume, togglePlay, setCurrentTime, setVolume } = usePlaybackStore()
   const { phase, getDuration } = useProjectStore()
 
   const duration = getDuration()
@@ -31,26 +31,14 @@ export default function Transport() {
 
       <div className="flex items-center gap-2 sm:gap-3">
         {/* 재생 컨트롤 */}
-        <div className="flex items-center gap-1.5">
-          <Button
-            variant="default"
-            size="icon"
-            onClick={togglePlay}
-            title={isPlaying ? '일시정지' : '재생'}
-          >
-            {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
-          </Button>
-
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8 sm:h-9 sm:w-9 rounded-lg"
-            onClick={stop}
-            title="정지"
-          >
-            <Square className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-          </Button>
-        </div>
+        <Button
+          variant="default"
+          size="icon"
+          onClick={togglePlay}
+          title={isPlaying ? '일시정지' : '재생'}
+        >
+          {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5 ml-0.5" />}
+        </Button>
 
         {/* 시간 표시 */}
         <div className="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] font-mono text-xs sm:text-sm font-medium text-foreground/80 whitespace-nowrap">
