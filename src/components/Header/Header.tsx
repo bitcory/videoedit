@@ -24,7 +24,6 @@ export default function Header() {
 
       setVideo(file, videoUrl, metadata.duration)
 
-      // 영상 트랙을 바로 생성
       useProjectStore.getState().setTracks([{
         id: generateId(),
         type: 'video',
@@ -36,7 +35,6 @@ export default function Header() {
         thumbnails,
       }])
 
-      // 자동으로 분리 단계로 이동 (App.tsx의 useEffect에서 처리)
       setPhase('separating')
     } catch (err) {
       console.error('비디오 로드 실패:', err)
@@ -44,10 +42,6 @@ export default function Header() {
     }
 
     e.target.value = ''
-  }
-
-  const handleUploadClick = () => {
-    fileInputRef.current?.click()
   }
 
   const handleExport = async () => {
@@ -91,20 +85,20 @@ export default function Header() {
 
   return (
     <TooltipProvider>
-      <header className="bg-[#111] border-b border-white/10 p-2 sm:p-3 relative z-50">
-        <div className="flex items-center justify-between gap-2 sm:gap-3">
+      <header className="bg-[#111] border-b border-white/10 px-2 py-1.5 sm:p-3 relative z-50 safe-area-top">
+        <div className="flex items-center justify-between gap-2">
           {/* 로고 */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <div className="w-8 h-8 bg-white border border-white/30 rotate-12" />
-              <div className="w-6 h-6 bg-[#333] border border-white/20 -rotate-6 -ml-3" />
+          <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+            <div className="flex items-center gap-1 flex-shrink-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-white border border-white/30 rotate-12" />
+              <div className="w-4 h-4 sm:w-6 sm:h-6 bg-[#333] border border-white/20 -rotate-6 -ml-2 sm:-ml-3" />
             </div>
-            <h1 className="text-lg sm:text-xl font-black text-white tracking-tight">TB 음원분리</h1>
+            <h1 className="text-sm sm:text-xl font-black text-white tracking-tight truncate">TB 음원분리</h1>
             <ThemeToggle />
           </div>
 
           {/* 업로드 + 내보내기 */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             <input
               ref={fileInputRef}
               type="file"
@@ -118,7 +112,8 @@ export default function Header() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={handleUploadClick}
+                  className="h-8 sm:h-9 px-2 sm:px-3"
+                  onClick={() => fileInputRef.current?.click()}
                   disabled={phase === 'separating' || isExporting}
                 >
                   <Upload className="h-4 w-4 sm:mr-2" />
@@ -134,13 +129,14 @@ export default function Header() {
                   <Button
                     variant="default"
                     size="sm"
+                    className="h-8 sm:h-9 px-2 sm:px-3"
                     onClick={handleExport}
                     disabled={isExporting}
                   >
                     {isExporting ? (
                       <>
                         <Loader2 className="h-4 w-4 sm:mr-2 animate-spin" />
-                        <span className="hidden sm:inline">{Math.round(exportProgress)}%</span>
+                        <span className="text-xs sm:text-sm">{Math.round(exportProgress)}%</span>
                       </>
                     ) : (
                       <>
