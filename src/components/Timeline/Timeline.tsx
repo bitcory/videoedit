@@ -56,8 +56,8 @@ export default function Timeline() {
           className="absolute top-0 flex flex-col"
           style={{ left: i * pixelsPerSecond + 8 }}
         >
-          <div className="w-0.5 h-3 bg-black" />
-          <span className="text-xs font-bold text-black ml-1">{i}초</span>
+          <div className="w-0.5 h-3 bg-white/40" />
+          <span className="text-xs font-bold text-white/60 ml-1">{i}초</span>
         </div>
       )
     }
@@ -218,7 +218,7 @@ export default function Timeline() {
   }, [isPlayheadDragging, pixelsPerSecond, projectDuration, setCurrentTime])
 
   return (
-    <div className="bg-[hsl(187,71%,54%)] border-t-4 border-black relative">
+    <div className="bg-[#141414] border-t border-white/10 relative">
       <div
         ref={trackAreaRef}
         className="overflow-x-auto overflow-y-hidden"
@@ -226,18 +226,18 @@ export default function Timeline() {
       >
         <div style={{ width: timelineWidth, minWidth: '100%' }}>
           {/* 눈금자 */}
-          <div className="h-8 bg-[hsl(45,100%,80%)] border-b-2 border-black relative">
+          <div className="h-8 bg-[#1a1a1a] border-b border-white/10 relative">
             {generateRulerMarks()}
           </div>
 
           {/* 트랙 영역 */}
-          <div className="relative bg-[hsl(187,71%,74%)] h-[100px] sm:h-[140px]">
+          <div className="relative bg-[#111] h-[100px] sm:h-[140px]">
             {/* 그리드 라인 */}
             <div className="absolute inset-0 pointer-events-none">
               {Array.from({ length: Math.ceil(projectDuration) }).map((_, i) => (
                 <div
                   key={i}
-                  className="absolute top-0 bottom-0 w-px bg-black/20"
+                  className="absolute top-0 bottom-0 w-px bg-white/5"
                   style={{ left: i * pixelsPerSecond + 8 }}
                 />
               ))}
@@ -262,14 +262,14 @@ export default function Timeline() {
               onMouseDown={handlePlayheadMouseDown}
               onTouchStart={handlePlayheadTouchStart}
             >
-              <div className="absolute left-[19px] top-0 bottom-0 w-1 bg-[hsl(0,84%,60%)]" />
-              <div className="absolute left-[12px] -top-1 w-5 h-5 bg-[hsl(0,84%,60%)] border-2 border-black transform rotate-45" />
+              <div className="absolute left-[19px] top-0 bottom-0 w-1 bg-white" />
+              <div className="absolute left-[12px] -top-1 w-5 h-5 bg-white border border-white/50 transform rotate-45" />
             </div>
 
             {/* 빈 상태 */}
             {clips.length === 0 && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <p className="text-black font-bold text-sm sm:text-base px-4 text-center bg-white/80 py-2 border-2 border-black shadow-[2px_2px_0_0_#000]">
+                <p className="text-white font-bold text-sm sm:text-base px-4 text-center bg-white/10 py-2 border border-white/20 shadow-[2px_2px_0_0_rgba(255,255,255,0.1)]">
                   비디오를 업로드하거나 드래그해서 추가하세요
                 </p>
               </div>

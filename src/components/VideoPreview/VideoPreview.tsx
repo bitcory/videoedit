@@ -100,14 +100,14 @@ const VideoPreview = forwardRef<HTMLVideoElement, VideoPreviewProps>((_, ref) =>
 
   if (clips.length === 0) {
     return (
-      <div className="flex items-center justify-center w-full max-w-2xl aspect-video bg-[hsl(271,76%,53%)] border-4 border-black shadow-[6px_6px_0_0_#000]">
+      <div className="flex items-center justify-center w-full max-w-2xl aspect-video bg-[#111] border border-white/20 shadow-[4px_4px_0_0_rgba(255,255,255,0.1)]">
         <div className="text-center">
           <div className="flex justify-center gap-2 mb-4">
-            <div className="w-8 h-8 bg-[hsl(340,82%,59%)] border-2 border-black rotate-12" />
-            <div className="w-6 h-6 bg-[hsl(45,100%,60%)] border-2 border-black -rotate-6" />
-            <div className="w-7 h-7 bg-[hsl(187,71%,54%)] border-2 border-black rotate-3" />
+            <div className="w-8 h-8 bg-white border border-white/30 rotate-12" />
+            <div className="w-6 h-6 bg-[#333] border border-white/20 -rotate-6" />
+            <div className="w-7 h-7 bg-[#222] border border-white/20 rotate-3" />
           </div>
-          <p className="text-white text-base sm:text-lg font-bold">비디오를 업로드해주세요</p>
+          <p className="text-white/70 text-base sm:text-lg font-bold">비디오를 업로드해주세요</p>
         </div>
       </div>
     )
@@ -117,7 +117,7 @@ const VideoPreview = forwardRef<HTMLVideoElement, VideoPreviewProps>((_, ref) =>
     return (
       <video
         ref={internalRef}
-        className="max-w-full max-h-[50vh] sm:max-h-[60vh] bg-black border-4 border-black shadow-[6px_6px_0_0_#000]"
+        className="max-w-full max-h-[50vh] sm:max-h-[60vh] bg-black border border-white/20 shadow-[4px_4px_0_0_rgba(255,255,255,0.1)]"
         playsInline
       />
     )
@@ -127,7 +127,7 @@ const VideoPreview = forwardRef<HTMLVideoElement, VideoPreviewProps>((_, ref) =>
     <video
       ref={internalRef}
       src={activeClip.videoUrl}
-      className="max-w-full max-h-[50vh] sm:max-h-[60vh] border-4 border-black shadow-[6px_6px_0_0_#000]"
+      className="max-w-full max-h-[50vh] sm:max-h-[60vh] border border-white/20 shadow-[4px_4px_0_0_rgba(255,255,255,0.1)]"
       onTimeUpdate={handleTimeUpdate}
       playsInline
     />

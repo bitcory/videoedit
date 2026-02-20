@@ -148,15 +148,15 @@ export default function Header({ videoRef }: HeaderProps) {
 
   return (
     <TooltipProvider>
-      <header className="bg-[hsl(45,100%,60%)] border-b-4 border-black p-2 sm:p-3 relative z-50">
+      <header className="bg-[#111] border-b border-white/10 p-2 sm:p-3 relative z-50">
         <div className="flex items-center justify-between gap-2 sm:gap-3 flex-wrap">
           {/* 로고 */}
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
-              <div className="w-8 h-8 bg-[hsl(340,82%,59%)] border-2 border-black rotate-12" />
-              <div className="w-6 h-6 bg-[hsl(187,71%,54%)] border-2 border-black -rotate-6 -ml-3" />
+              <div className="w-8 h-8 bg-white border border-white/30 rotate-12" />
+              <div className="w-6 h-6 bg-[#333] border border-white/20 -rotate-6 -ml-3" />
             </div>
-            <h1 className="text-lg sm:text-xl font-black text-black tracking-tight">TB 비디오에디터</h1>
+            <h1 className="text-lg sm:text-xl font-black text-white tracking-tight">TB 비디오에디터</h1>
             <ThemeToggle />
           </div>
 
@@ -242,7 +242,7 @@ export default function Header({ videoRef }: HeaderProps) {
             <select
               value={captureScale}
               onChange={(e) => setCaptureScale(Number(e.target.value) as 1 | 2)}
-              className="h-9 border-2 border-black bg-white text-black px-3 text-sm font-bold shadow-[2px_2px_0_0_#000]"
+              className="h-9 border border-white/20 bg-[#1a1a1a] text-white px-3 text-sm font-bold shadow-[2px_2px_0_0_rgba(255,255,255,0.1)]"
             >
               <option value={1}>1x 원본</option>
               <option value={2}>2x 업스케일</option>
@@ -280,7 +280,7 @@ export default function Header({ videoRef }: HeaderProps) {
               </TooltipTrigger>
               <TooltipContent>축소</TooltipContent>
             </Tooltip>
-            <span className="font-bold min-w-[50px] text-center text-sm bg-white text-black border-2 border-black px-2 py-1">{Math.round(zoom * 100)}%</span>
+            <span className="font-bold min-w-[50px] text-center text-sm bg-[#1a1a1a] text-white border border-white/20 px-2 py-1">{Math.round(zoom * 100)}%</span>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button

@@ -77,17 +77,17 @@ export default function StemSeparationModal() {
     <div className="fixed inset-0 z-[9999] flex items-center justify-center">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-black/70"
         onClick={modalState !== 'processing' ? closeModal : undefined}
       />
 
       {/* Modal */}
-      <div className="relative w-[90vw] max-w-lg bg-white border-4 border-black shadow-[8px_8px_0_0_#000] p-6 sm:p-8">
+      <div className="relative w-[90vw] max-w-lg bg-[#111] border border-white/20 shadow-[6px_6px_0_0_rgba(255,255,255,0.1)] p-6 sm:p-8">
         {/* Close button */}
         {modalState !== 'processing' && (
           <button
             onClick={closeModal}
-            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-[hsl(340,82%,59%)] border-2 border-black text-white hover:bg-[hsl(340,82%,50%)] transition-colors"
+            className="absolute top-3 right-3 w-8 h-8 flex items-center justify-center bg-white/10 border border-white/20 text-white hover:bg-white/20 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
@@ -95,20 +95,20 @@ export default function StemSeparationModal() {
 
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-12 h-12 bg-[hsl(271,76%,53%)] border-3 border-black flex items-center justify-center rotate-3">
-            <AudioWaveform className="w-6 h-6 text-white" />
+          <div className="w-12 h-12 bg-white border border-white/30 flex items-center justify-center rotate-3">
+            <AudioWaveform className="w-6 h-6 text-black" />
           </div>
           <div>
-            <h2 className="text-xl font-black text-black">AI 음원 분리</h2>
-            <p className="text-sm text-gray-600 font-bold">보컬과 반주를 분리합니다</p>
+            <h2 className="text-xl font-black text-white">AI 음원 분리</h2>
+            <p className="text-sm text-white/50 font-bold">보컬과 반주를 분리합니다</p>
           </div>
         </div>
 
         {/* Content by state */}
         {modalState === 'idle' && (
           <div>
-            <div className="bg-[hsl(45,100%,90%)] border-3 border-black p-4 mb-6">
-              <p className="text-sm text-black font-bold leading-relaxed">
+            <div className="bg-white/5 border border-white/10 p-4 mb-6">
+              <p className="text-sm text-white/80 font-bold leading-relaxed">
                 AI 모델(MDX-Net)을 사용하여 비디오의 오디오에서 보컬과 반주(배경음악)를
                 분리합니다. 첫 실행 시 모델 다운로드(~67MB)가 필요하며, 이후에는 캐시에서
                 즉시 로드됩니다.
@@ -116,13 +116,13 @@ export default function StemSeparationModal() {
             </div>
 
             <div className="flex gap-3">
-              <div className="flex-1 bg-[hsl(340,82%,95%)] border-2 border-black p-3 text-center">
-                <Mic className="w-6 h-6 mx-auto mb-1 text-[hsl(340,82%,59%)]" />
-                <p className="text-xs font-black text-black">보컬</p>
+              <div className="flex-1 bg-white/5 border border-white/10 p-3 text-center">
+                <Mic className="w-6 h-6 mx-auto mb-1 text-white/70" />
+                <p className="text-xs font-black text-white">보컬</p>
               </div>
-              <div className="flex-1 bg-[hsl(187,71%,90%)] border-2 border-black p-3 text-center">
-                <Music2 className="w-6 h-6 mx-auto mb-1 text-[hsl(187,71%,44%)]" />
-                <p className="text-xs font-black text-black">반주</p>
+              <div className="flex-1 bg-white/5 border border-white/10 p-3 text-center">
+                <Music2 className="w-6 h-6 mx-auto mb-1 text-white/70" />
+                <p className="text-xs font-black text-white">반주</p>
               </div>
             </div>
 
@@ -142,26 +142,26 @@ export default function StemSeparationModal() {
         {modalState === 'processing' && (
           <div>
             <div className="mb-4">
-              <div className="flex justify-between text-sm font-bold text-black mb-2">
+              <div className="flex justify-between text-sm font-bold text-white mb-2">
                 <span>{stageLabel}</span>
                 <span>{Math.round(progress)}%</span>
               </div>
 
               {/* Progress bar */}
-              <div className="h-6 bg-white border-3 border-black overflow-hidden">
+              <div className="h-6 bg-[#1a1a1a] border border-white/20 overflow-hidden">
                 <div
-                  className="h-full bg-[hsl(150,60%,50%)] transition-all duration-300 ease-out"
+                  className="h-full bg-white transition-all duration-300 ease-out"
                   style={{ width: `${progress}%` }}
                 />
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-sm text-gray-600 font-bold">
+            <div className="flex items-center gap-2 text-sm text-white/50 font-bold">
               <Loader2 className="w-4 h-4 animate-spin" />
               <span>{progressMessage}</span>
             </div>
 
-            <p className="text-xs text-gray-400 mt-4 font-bold">
+            <p className="text-xs text-white/30 mt-4 font-bold">
               처리 중에는 창을 닫지 마세요
             </p>
           </div>
@@ -169,9 +169,9 @@ export default function StemSeparationModal() {
 
         {modalState === 'complete' && (
           <div>
-            <div className="bg-[hsl(150,60%,90%)] border-3 border-black p-4 mb-6 text-center">
-              <p className="text-lg font-black text-black">분리 완료!</p>
-              <p className="text-sm text-gray-600 font-bold">아래 버튼으로 다운로드하세요</p>
+            <div className="bg-white/5 border border-white/10 p-4 mb-6 text-center">
+              <p className="text-lg font-black text-white">분리 완료!</p>
+              <p className="text-sm text-white/50 font-bold">아래 버튼으로 다운로드하세요</p>
             </div>
 
             <div className="space-y-3">
@@ -210,9 +210,9 @@ export default function StemSeparationModal() {
 
         {modalState === 'error' && (
           <div>
-            <div className="bg-red-50 border-3 border-black p-4 mb-6">
-              <p className="text-sm font-black text-red-600">오류 발생</p>
-              <p className="text-sm text-red-500 font-bold mt-1">{errorMessage}</p>
+            <div className="bg-white/5 border border-white/10 p-4 mb-6">
+              <p className="text-sm font-black text-white/80">오류 발생</p>
+              <p className="text-sm text-white/50 font-bold mt-1">{errorMessage}</p>
             </div>
 
             <div className="flex gap-3">
@@ -235,9 +235,9 @@ export default function StemSeparationModal() {
           </div>
         )}
 
-        {/* Memphis decorative elements */}
-        <div className="absolute -top-3 -left-3 w-6 h-6 bg-[hsl(45,100%,60%)] border-2 border-black rotate-45" />
-        <div className="absolute -bottom-3 -right-3 w-6 h-6 bg-[hsl(187,71%,54%)] border-2 border-black rounded-full" />
+        {/* Decorative elements */}
+        <div className="absolute -top-2 -left-2 w-4 h-4 bg-white border border-white/30 rotate-45" />
+        <div className="absolute -bottom-2 -right-2 w-4 h-4 bg-[#333] border border-white/20 rounded-full" />
       </div>
     </div>,
     document.body

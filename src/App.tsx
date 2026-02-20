@@ -92,7 +92,7 @@ function App() {
       {/* Main content */}
       <div className="flex-1 overflow-auto">
         {/* Video preview */}
-        <div className="flex justify-center p-2 sm:p-4 bg-muted/30">
+        <div className="flex justify-center p-2 sm:p-4 bg-black/30">
           <VideoPreview ref={videoRef} />
         </div>
 

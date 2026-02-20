@@ -34,10 +34,10 @@ export default function VideoClipComponent({ clip, pixelsPerSecond, onDragStart 
   return (
     <div
       className={cn(
-        "absolute cursor-move transition-all touch-none h-[70px] sm:h-[100px] overflow-hidden border-3 border-black",
+        "absolute cursor-move transition-all touch-none h-[70px] sm:h-[100px] overflow-hidden border border-white/20",
         isSelected
-          ? "ring-4 ring-[hsl(45,100%,60%)] z-10 shadow-[4px_4px_0_0_hsl(45,100%,60%)]"
-          : "shadow-[3px_3px_0_0_#000] hover:shadow-[2px_2px_0_0_#000] hover:translate-x-[1px] hover:translate-y-[1px]"
+          ? "ring-2 ring-white z-10 shadow-[3px_3px_0_0_rgba(255,255,255,0.2)]"
+          : "shadow-[2px_2px_0_0_rgba(255,255,255,0.1)] hover:shadow-[1px_1px_0_0_rgba(255,255,255,0.1)] hover:translate-x-[1px] hover:translate-y-[1px]"
       )}
       style={{
         left: clipLeft,
@@ -48,7 +48,7 @@ export default function VideoClipComponent({ clip, pixelsPerSecond, onDragStart 
       onTouchStart={handleTouchStart}
     >
       {/* 클립 배경 (썸네일 스트립) */}
-      <div className="w-full h-full bg-[hsl(340,82%,59%)] overflow-hidden flex">
+      <div className="w-full h-full bg-[#222] overflow-hidden flex">
         {clip.thumbnails.map((thumb, idx) => (
           <div
             key={idx}
@@ -67,14 +67,14 @@ export default function VideoClipComponent({ clip, pixelsPerSecond, onDragStart 
 
       {/* 클립 이름 */}
       <div className="absolute top-1 left-2 right-2">
-        <span className="text-xs font-bold bg-white text-black px-2 py-0.5 border border-black truncate block max-w-full">
+        <span className="text-xs font-bold bg-black/80 text-white px-2 py-0.5 border border-white/20 truncate block max-w-full">
           {clip.name}
         </span>
       </div>
 
       {/* 트림 핸들 - 왼쪽 */}
       <div
-        className="absolute left-0 top-0 bottom-0 w-3 bg-black cursor-ew-resize hover:bg-[hsl(45,100%,60%)] transition-colors"
+        className="absolute left-0 top-0 bottom-0 w-3 bg-white/20 cursor-ew-resize hover:bg-white/40 transition-colors"
         onMouseDown={(e) => {
           e.stopPropagation()
         }}
@@ -82,7 +82,7 @@ export default function VideoClipComponent({ clip, pixelsPerSecond, onDragStart 
 
       {/* 트림 핸들 - 오른쪽 */}
       <div
-        className="absolute right-0 top-0 bottom-0 w-3 bg-black cursor-ew-resize hover:bg-[hsl(45,100%,60%)] transition-colors"
+        className="absolute right-0 top-0 bottom-0 w-3 bg-white/20 cursor-ew-resize hover:bg-white/40 transition-colors"
         onMouseDown={(e) => {
           e.stopPropagation()
         }}

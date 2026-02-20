@@ -29,7 +29,7 @@ export default function Transport() {
   }
 
   return (
-    <div className="bg-[hsl(340,82%,59%)] border-t-4 border-black p-2 sm:p-3">
+    <div className="bg-[#0d0d0d] border-t border-white/10 p-2 sm:p-3">
       <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-center sm:justify-start">
         {/* 재생 컨트롤 */}
         <div className="flex items-center gap-1 sm:gap-2">
@@ -75,10 +75,10 @@ export default function Transport() {
         </div>
 
         {/* 시간 표시 */}
-        <div className="px-3 py-1.5 bg-white border-2 border-black font-mono text-sm font-bold shadow-[2px_2px_0_0_#000] text-black">
+        <div className="px-3 py-1.5 bg-[#1a1a1a] border border-white/20 font-mono text-sm font-bold shadow-[2px_2px_0_0_rgba(255,255,255,0.1)] text-white">
           <span>{formatTime(currentTime)}</span>
-          <span className="mx-2 text-gray-500">/</span>
-          <span className="text-gray-600">{formatTime(projectDuration)}</span>
+          <span className="mx-2 text-white/30">/</span>
+          <span className="text-white/50">{formatTime(projectDuration)}</span>
         </div>
 
         {/* 시크바 */}
@@ -98,7 +98,7 @@ export default function Transport() {
           <Button
             variant="ghost"
             size="icon"
-            className="h-9 w-9 text-white hover:text-black"
+            className="h-9 w-9 text-white/70 hover:text-white"
             onClick={() => setVolume(volume > 0 ? 0 : 1)}
           >
             {volume > 0 ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
@@ -111,14 +111,14 @@ export default function Transport() {
             onValueChange={([value]) => setVolume(value)}
             className="w-24"
           />
-          <span className="text-sm font-bold text-white w-10">{Math.round(volume * 100)}%</span>
+          <span className="text-sm font-bold text-white/70 w-10">{Math.round(volume * 100)}%</span>
         </div>
 
         {/* 모바일 볼륨 버튼 */}
         <Button
           variant="ghost"
           size="icon"
-          className="sm:hidden h-8 w-8 text-white"
+          className="sm:hidden h-8 w-8 text-white/70"
           onClick={() => setVolume(volume > 0 ? 0 : 1)}
         >
           {volume > 0 ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
