@@ -113,6 +113,7 @@ function App() {
           },
         ])
 
+        usePlaybackStore.getState().stop()
         setPhase('ready')
       } catch (err) {
         if (cancelled) return
