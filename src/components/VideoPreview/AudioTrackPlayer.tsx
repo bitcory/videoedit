@@ -12,9 +12,7 @@ const SYNC_THRESHOLD = 0.05
 export default function AudioTrackPlayer({ tracks, videoRef }: AudioTrackPlayerProps) {
   const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map())
   const rafRef = useRef<number>(0)
-  const wasPlayingRef = useRef(false)
 
-  // 모든 활성 오디오 요소를 가져오는 헬퍼
   const getActiveAudioElements = useCallback(() => {
     const elements: HTMLAudioElement[] = []
     for (const track of tracks) {
@@ -25,78 +23,75 @@ export default function AudioTrackPlayer({ tracks, videoRef }: AudioTrackPlayerP
     return elements
   }, [tracks])
 
-  // RAF 기반 동기화 루프: 비디오 요소를 마스터 클럭으로 사용
-  const syncLoop = useCallback(() => {
-    const video = videoRef.current
-    if (!video || video.paused) {
-      rafRef.current = 0
-      return
-    }
+  // RAF 기반 동기화 루프: 비디오를 마스터 클럭으로 사용
+  const startSyncLoop = useCallback(() => {
+    if (rafRef.current) return
 
-    const masterTime = video.currentTime
-    const audioEls = getActiveAudioElements()
-
-    for (const el of audioEls) {
-      const drift = Math.abs(el.currentTime - masterTime)
-      if (drift > SYNC_THRESHOLD) {
-        el.currentTime = masterTime
+    const tick = () => {
+      const video = videoRef.current
+      if (!video || video.paused) {
+        rafRef.current = 0
+        return
       }
+
+      const masterTime = video.currentTime
+      const audioEls = getActiveAudioElements()
+
+      for (const el of audioEls) {
+        if (Math.abs(el.currentTime - masterTime) > SYNC_THRESHOLD) {
+          el.currentTime = masterTime
+        }
+      }
+
+      rafRef.current = requestAnimationFrame(tick)
     }
 
-    // store 업데이트는 VideoPreview의 timeupdate에서 처리
-    rafRef.current = requestAnimationFrame(syncLoop)
+    rafRef.current = requestAnimationFrame(tick)
   }, [videoRef, getActiveAudioElements])
 
-  // 재생 상태 변경 감지 → 동시에 play/pause
+  const stopSyncLoop = useCallback(() => {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current)
+      rafRef.current = 0
+    }
+  }, [])
+
   const isPlaying = usePlaybackStore(s => s.isPlaying)
   const volume = usePlaybackStore(s => s.volume)
   const currentTime = usePlaybackStore(s => s.currentTime)
 
+  // isPlaying 변경 시 동시에 play/pause (currentTime 의존성 제거!)
   useEffect(() => {
     const audioEls = getActiveAudioElements()
     const video = videoRef.current
 
     if (isPlaying) {
-      // 먼저 모든 오디오를 비디오 시간에 맞춤
       const masterTime = video ? video.currentTime : currentTime
       for (const el of audioEls) {
         el.currentTime = masterTime
         el.play().catch(() => {})
       }
-      // RAF 동기화 루프 시작
-      if (!rafRef.current) {
-        rafRef.current = requestAnimationFrame(syncLoop)
+      // 비디오가 실제로 재생 시작한 후 동기화 루프 시작
+      const waitAndSync = () => {
+        if (video && !video.paused) {
+          startSyncLoop()
+        } else {
+          requestAnimationFrame(waitAndSync)
+        }
       }
-      wasPlayingRef.current = true
+      requestAnimationFrame(waitAndSync)
     } else {
-      // 모두 정지
+      stopSyncLoop()
       for (const el of audioEls) {
         el.pause()
       }
-      // RAF 루프 정리
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-        rafRef.current = 0
-      }
-      // 재생 중이었다가 정지된 경우 → 시간 동기화
-      if (wasPlayingRef.current) {
-        const masterTime = video ? video.currentTime : currentTime
-        for (const el of audioEls) {
-          el.currentTime = masterTime
-        }
-        wasPlayingRef.current = false
-      }
     }
 
-    return () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current)
-        rafRef.current = 0
-      }
-    }
-  }, [isPlaying, getActiveAudioElements, videoRef, syncLoop, currentTime])
+    return () => stopSyncLoop()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying])
 
-  // 정지 상태에서 시크 시 오디오도 같이 이동
+  // 정지 상태에서 시크
   useEffect(() => {
     if (isPlaying) return
     const audioEls = getActiveAudioElements()
@@ -105,7 +100,7 @@ export default function AudioTrackPlayer({ tracks, videoRef }: AudioTrackPlayerP
     }
   }, [currentTime, isPlaying, getActiveAudioElements])
 
-  // 볼륨 동기화
+  // 볼륨
   useEffect(() => {
     for (const [, el] of audioRefs.current) {
       el.volume = volume
@@ -119,7 +114,6 @@ export default function AudioTrackPlayer({ tracks, videoRef }: AudioTrackPlayerP
     }
   })
 
-  // 활성 오디오 트랙만 필터
   const activeAudioTracks = tracks.filter(t => t.type !== 'video' && t.active && t.url)
 
   return (

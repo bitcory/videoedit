@@ -137,15 +137,29 @@
   background: #444;
 }
 
+/* Safe area insets for notched devices */
+.safe-area-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
 /* Mobile optimizations */
 @media (max-width: 640px) {
   ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 4px;
+    height: 4px;
   }
 
   .touch-none {
     -webkit-user-select: none;
     user-select: none;
+  }
+
+  /* 모바일에서 100dvh 지원 */
+  html, body, #root {
+    height: 100dvh;
+    overflow: hidden;
   }
 }

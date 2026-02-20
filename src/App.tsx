@@ -156,31 +156,27 @@ function App() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-background">
+    <div className="h-[100dvh] flex flex-col bg-background overflow-hidden">
       <Header />
 
-      <div className="flex-1 overflow-auto flex flex-col">
-        {/* empty 상태: 업로드 프롬프트 */}
+      <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
         {phase === 'empty' && (
           <UploadPrompt onFileSelected={handleFileSelected} />
         )}
 
-        {/* uploading 상태: 로딩 */}
         {phase === 'uploading' && (
           <div className="flex-1 flex items-center justify-center">
             <p className="text-white/50 font-bold">영상 준비 중...</p>
           </div>
         )}
 
-        {/* separating 상태: 진행률 */}
         {phase === 'separating' && (
           <SeparationProgress />
         )}
 
-        {/* ready / exporting 상태: 비디오 + 타임라인 */}
         {(phase === 'ready' || phase === 'exporting') && (
           <>
-            <div className="flex justify-center p-2 sm:p-4 bg-black/30">
+            <div className="flex-shrink-0 flex justify-center p-1 sm:p-4 bg-black/30">
               <VideoPreview ref={videoRef} />
             </div>
             <Timeline />

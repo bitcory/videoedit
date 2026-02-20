@@ -1,4 +1,4 @@
-import { useEffect, useRef, forwardRef, useImperativeHandle, useCallback } from 'react'
+import { useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
 import { useProjectStore } from '../../store/projectStore'
 import { usePlaybackStore } from '../../store/playbackStore'
 import AudioTrackPlayer from './AudioTrackPlayer'
@@ -37,19 +37,46 @@ const VideoPreview = forwardRef<HTMLVideoElement>((_, ref) => {
     }
   }, [currentTime, isPlaying])
 
-  // 비디오 timeupdate → store (마스터 클럭)
-  const handleTimeUpdate = useCallback(() => {
+  // RAF 루프: 재생 중 60fps로 store 업데이트 (timeupdate 대신)
+  useEffect(() => {
+    if (!isPlaying) return
     const video = internalRef.current
-    if (!video || !isPlaying) return
+    if (!video) return
 
-    const t = video.currentTime
-    if (t >= duration) {
+    let raf: number
+
+    const tick = () => {
+      if (!video || video.paused || video.ended) return
+
+      const t = video.currentTime
+      if (t >= duration) {
+        pause()
+        setCurrentTime(duration)
+        return
+      }
+
+      setCurrentTime(t)
+      raf = requestAnimationFrame(tick)
+    }
+
+    raf = requestAnimationFrame(tick)
+
+    return () => cancelAnimationFrame(raf)
+  }, [isPlaying, duration, pause, setCurrentTime])
+
+  // ended 이벤트 처리 (영상 끝에 도달)
+  useEffect(() => {
+    const video = internalRef.current
+    if (!video) return
+
+    const handleEnded = () => {
       pause()
       setCurrentTime(duration)
-      return
     }
-    setCurrentTime(t)
-  }, [isPlaying, duration, pause, setCurrentTime])
+
+    video.addEventListener('ended', handleEnded)
+    return () => video.removeEventListener('ended', handleEnded)
+  }, [pause, setCurrentTime, duration])
 
   if (phase === 'empty' || phase === 'uploading') {
     return null
@@ -63,7 +90,6 @@ const VideoPreview = forwardRef<HTMLVideoElement>((_, ref) => {
         ref={internalRef}
         src={videoUrl}
         className="w-full max-h-[35vh] sm:max-h-[50vh] object-contain border border-white/20 shadow-[4px_4px_0_0_rgba(255,255,255,0.1)]"
-        onTimeUpdate={handleTimeUpdate}
         muted
         playsInline
       />
