@@ -1,5 +1,3 @@
-import { FrameCaptureOptions } from '../types'
-
 /**
  * 비디오 파일에서 메타데이터 추출
  */
@@ -66,46 +64,6 @@ export async function generateThumbnails(
   }
 
   return thumbnails
-}
-
-/**
- * 현재 프레임 캡처 (업스케일 지원)
- */
-export function captureFrame(
-  video: HTMLVideoElement,
-  options: FrameCaptureOptions = { scale: 1, format: 'png', quality: 0.92 }
-): string {
-  const { scale, format, quality } = options
-
-  const width = video.videoWidth * scale
-  const height = video.videoHeight * scale
-
-  const canvas = document.createElement('canvas')
-  canvas.width = width
-  canvas.height = height
-
-  const ctx = canvas.getContext('2d')!
-
-  // 고품질 업스케일링 설정
-  ctx.imageSmoothingEnabled = true
-  ctx.imageSmoothingQuality = 'high'
-
-  ctx.drawImage(video, 0, 0, width, height)
-
-  const mimeType = format === 'png' ? 'image/png' : 'image/jpeg'
-  return canvas.toDataURL(mimeType, format === 'jpg' ? quality : undefined)
-}
-
-/**
- * Data URL을 파일로 다운로드
- */
-export function downloadDataUrl(dataUrl: string, filename: string) {
-  const link = document.createElement('a')
-  link.href = dataUrl
-  link.download = filename
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
 }
 
 /**

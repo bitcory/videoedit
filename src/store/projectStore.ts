@@ -1,97 +1,70 @@
 import { create } from 'zustand'
-import { VideoClip } from '../types'
+import { Track, AppPhase } from '../types'
 
 interface ProjectState {
-  projectName: string
-  clips: VideoClip[]
-  selectedClipId: string | null
-  zoom: number
+  phase: AppPhase
+  videoFile: File | null
+  videoUrl: string
+  videoDuration: number
+  tracks: Track[]
+  separationProgress: number
+  separationMessage: string
+  exportProgress: number
 
   // Actions
-  setProjectName: (name: string) => void
-  addClip: (clip: VideoClip) => void
-  removeClip: (clipId: string) => void
-  updateClip: (clipId: string, updates: Partial<VideoClip>) => void
-  selectClip: (clipId: string | null) => void
-  setZoom: (zoom: number) => void
-  splitClip: (clipId: string, splitTime: number) => void
-  collapseGaps: () => void  // 빈 공간 제거
-  getProjectDuration: () => number
+  setPhase: (phase: AppPhase) => void
+  setVideo: (file: File, url: string, duration: number) => void
+  setTracks: (tracks: Track[]) => void
+  toggleTrack: (trackId: string) => void
+  setSeparationProgress: (progress: number, message: string) => void
+  setExportProgress: (progress: number) => void
+  reset: () => void
+  getDuration: () => number
 }
 
 export const useProjectStore = create<ProjectState>((set, get) => ({
-  projectName: '새 프로젝트',
-  clips: [],
-  selectedClipId: null,
-  zoom: 1,
+  phase: 'empty',
+  videoFile: null,
+  videoUrl: '',
+  videoDuration: 0,
+  tracks: [],
+  separationProgress: 0,
+  separationMessage: '',
+  exportProgress: 0,
 
-  setProjectName: (name) => set({ projectName: name }),
+  setPhase: (phase) => set({ phase }),
 
-  addClip: (clip) => set((state) => ({
-    clips: [...state.clips, clip]
-  })),
+  setVideo: (file, url, duration) => set({
+    videoFile: file,
+    videoUrl: url,
+    videoDuration: duration,
+  }),
 
-  removeClip: (clipId) => set((state) => ({
-    clips: state.clips.filter(c => c.id !== clipId),
-    selectedClipId: state.selectedClipId === clipId ? null : state.selectedClipId
-  })),
+  setTracks: (tracks) => set({ tracks }),
 
-  updateClip: (clipId, updates) => set((state) => ({
-    clips: state.clips.map(c =>
-      c.id === clipId ? { ...c, ...updates } : c
+  toggleTrack: (trackId) => set((state) => ({
+    tracks: state.tracks.map(t =>
+      t.id === trackId ? { ...t, active: !t.active } : t
     )
   })),
 
-  selectClip: (clipId) => set({ selectedClipId: clipId }),
-
-  setZoom: (zoom) => set({ zoom: Math.max(0.1, Math.min(10, zoom)) }),
-
-  splitClip: (clipId, splitTime) => set((state) => {
-    const clip = state.clips.find(c => c.id === clipId)
-    if (!clip) return state
-
-    const relativeTime = splitTime - clip.startTime
-    if (relativeTime <= clip.trimStart || relativeTime >= clip.trimEnd) return state
-
-    const firstClip: VideoClip = {
-      ...clip,
-      id: `${clip.id}-1`,
-      trimEnd: relativeTime
-    }
-
-    const secondClip: VideoClip = {
-      ...clip,
-      id: `${clip.id}-2`,
-      startTime: splitTime,
-      trimStart: relativeTime
-    }
-
-    return {
-      clips: state.clips.map(c => c.id === clipId ? firstClip : c).concat(secondClip)
-    }
+  setSeparationProgress: (progress, message) => set({
+    separationProgress: progress,
+    separationMessage: message,
   }),
 
-  // 빈 공간 제거 - 클립들을 시작 시간 순으로 정렬하고 간격 없이 붙임
-  collapseGaps: () => set((state) => {
-    if (state.clips.length === 0) return state
+  setExportProgress: (progress) => set({ exportProgress: progress }),
 
-    // 시작 시간 순으로 정렬
-    const sortedClips = [...state.clips].sort((a, b) => a.startTime - b.startTime)
-
-    let currentTime = 0
-    const collapsedClips = sortedClips.map(clip => {
-      const clipDuration = clip.trimEnd - clip.trimStart
-      const newClip = { ...clip, startTime: currentTime }
-      currentTime += clipDuration
-      return newClip
-    })
-
-    return { clips: collapsedClips }
+  reset: () => set({
+    phase: 'empty',
+    videoFile: null,
+    videoUrl: '',
+    videoDuration: 0,
+    tracks: [],
+    separationProgress: 0,
+    separationMessage: '',
+    exportProgress: 0,
   }),
 
-  getProjectDuration: () => {
-    const { clips } = get()
-    if (clips.length === 0) return 0
-    return Math.max(...clips.map(c => c.startTime + (c.trimEnd - c.trimStart)))
-  }
+  getDuration: () => get().videoDuration,
 }))

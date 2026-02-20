@@ -1,6 +1,6 @@
 import { FFmpeg } from '@ffmpeg/ffmpeg'
 import { fetchFile, toBlobURL } from '@ffmpeg/util'
-import { VideoClip, ExportOptions } from '../types'
+import { Track } from '../types'
 
 class VideoEngine {
   private ffmpeg: FFmpeg | null = null
@@ -10,7 +10,6 @@ class VideoEngine {
   async load(onProgress?: (progress: number) => void): Promise<void> {
     if (this.loaded) return
     if (this.loading) {
-      // 이미 로딩 중이면 완료될 때까지 대기
       while (this.loading) {
         await new Promise(resolve => setTimeout(resolve, 100))
       }
@@ -26,10 +25,7 @@ class VideoEngine {
         onProgress?.(progress * 100)
       })
 
-      // jsdelivr CDN 사용 (더 안정적)
       const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm'
-
-      console.log('FFmpeg 로딩 시작...')
 
       await this.ffmpeg.load({
         coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
@@ -37,7 +33,6 @@ class VideoEngine {
       })
 
       this.loaded = true
-      console.log('FFmpeg 로딩 완료!')
     } catch (error) {
       console.error('FFmpeg 로딩 실패:', error)
       this.ffmpeg = null
@@ -52,75 +47,102 @@ class VideoEngine {
   }
 
   /**
-   * 비디오 내보내기
+   * 비디오 파일에서 WAV 오디오 추출
    */
-  async exportVideo(
-    clips: VideoClip[],
-    options: ExportOptions,
+  async extractAudioFromFile(file: File): Promise<Blob> {
+    if (!this.ffmpeg || !this.loaded) {
+      throw new Error('FFmpeg가 로드되지 않았습니다')
+    }
+
+    await this.ffmpeg.writeFile('input.mp4', await fetchFile(file))
+
+    await this.ffmpeg.exec([
+      '-i', 'input.mp4',
+      '-vn', '-acodec', 'pcm_s16le',
+      '-ar', '44100', '-ac', '2',
+      'output.wav'
+    ])
+
+    const data = await this.ffmpeg.readFile('output.wav')
+    return new Blob([data], { type: 'audio/wav' })
+  }
+
+  /**
+   * 활성 트랙 기반 내보내기
+   *
+   * | 활성 트랙          | 동작                          |
+   * |--------------------|-------------------------------|
+   * | 영상+보컬+반주     | 원본 파일 그대로 복사          |
+   * | 영상+오디오 1개    | -map 0:v -map 1:a 합성        |
+   * | 영상만             | -an 무음 영상                 |
+   * | 오디오만 (1개)     | WAV 복사                      |
+   * | 오디오 2개         | amix 필터로 믹싱              |
+   */
+  async exportTracks(
+    videoFile: File,
+    tracks: Track[],
     onProgress?: (progress: number) => void
   ): Promise<Blob> {
     if (!this.ffmpeg || !this.loaded) {
       throw new Error('FFmpeg가 로드되지 않았습니다')
     }
 
-    // progress 콜백 등록
     if (onProgress) {
       this.ffmpeg.on('progress', ({ progress }) => {
         onProgress(progress * 100)
       })
     }
 
-    // 단일 클립인 경우 간단히 처리
-    if (clips.length === 1) {
-      const clip = clips[0]
-      if (!clip.file) throw new Error('클립 파일이 없습니다')
+    const activeTracks = tracks.filter(t => t.active)
+    const hasVideo = activeTracks.some(t => t.type === 'video')
+    const audioTracks = activeTracks.filter(t => t.type !== 'video')
 
-      await this.ffmpeg.writeFile('input.mp4', await fetchFile(clip.file))
-
-      const trimDuration = clip.trimEnd - clip.trimStart
-      const outputExt = options.format === 'mp3' || options.format === 'wav' ? options.format : 'mp4'
-
-      const args = [
-        '-i', 'input.mp4',
-        '-ss', clip.trimStart.toString(),
-        '-t', trimDuration.toString(),
-      ]
-
-      // 오디오만 추출하는 경우
-      if (options.format === 'mp3') {
-        args.push('-vn', '-acodec', 'libmp3lame', '-q:a', '2')
-      } else if (options.format === 'wav') {
-        args.push('-vn', '-acodec', 'pcm_s16le')
-      } else {
-        // 비디오 품질 설정
-        const crf = options.quality === 'high' ? '18' : options.quality === 'medium' ? '23' : '28'
-        args.push('-c:v', 'libx264', '-crf', crf, '-c:a', 'aac')
-      }
-
-      args.push(`output.${outputExt}`)
-
-      await this.ffmpeg.exec(args)
-      const data = await this.ffmpeg.readFile(`output.${outputExt}`)
-
-      const mimeType = options.format === 'mp3' ? 'audio/mpeg' :
-                       options.format === 'wav' ? 'audio/wav' :
-                       options.format === 'webm' ? 'video/webm' : 'video/mp4'
-
-      return new Blob([data], { type: mimeType })
+    // 영상+보컬+반주 = 모두 활성 → 원본 복사
+    if (hasVideo && audioTracks.length === 2) {
+      return new Blob([videoFile], { type: 'video/mp4' })
     }
 
-    // 여러 클립 병합은 추후 구현
-    throw new Error('여러 클립 병합은 아직 지원되지 않습니다')
-  }
+    // 영상만 (무음)
+    if (hasVideo && audioTracks.length === 0) {
+      await this.ffmpeg.writeFile('input.mp4', await fetchFile(videoFile))
+      await this.ffmpeg.exec(['-i', 'input.mp4', '-an', '-c:v', 'copy', 'output.mp4'])
+      const data = await this.ffmpeg.readFile('output.mp4')
+      return new Blob([data], { type: 'video/mp4' })
+    }
 
-  /**
-   * 오디오만 추출
-   */
-  async extractAudio(
-    clip: VideoClip,
-    format: 'mp3' | 'wav' = 'mp3'
-  ): Promise<Blob> {
-    return this.exportVideo([clip], { format, quality: 'high' })
+    // 영상 + 오디오 1개
+    if (hasVideo && audioTracks.length === 1) {
+      await this.ffmpeg.writeFile('input.mp4', await fetchFile(videoFile))
+      await this.ffmpeg.writeFile('audio.wav', await fetchFile(audioTracks[0].blob!))
+      await this.ffmpeg.exec([
+        '-i', 'input.mp4', '-i', 'audio.wav',
+        '-map', '0:v', '-map', '1:a',
+        '-c:v', 'copy', '-c:a', 'aac', '-shortest',
+        'output.mp4'
+      ])
+      const data = await this.ffmpeg.readFile('output.mp4')
+      return new Blob([data], { type: 'video/mp4' })
+    }
+
+    // 오디오만 1개
+    if (!hasVideo && audioTracks.length === 1) {
+      return audioTracks[0].blob!
+    }
+
+    // 오디오 2개 → amix
+    if (!hasVideo && audioTracks.length === 2) {
+      await this.ffmpeg.writeFile('a1.wav', await fetchFile(audioTracks[0].blob!))
+      await this.ffmpeg.writeFile('a2.wav', await fetchFile(audioTracks[1].blob!))
+      await this.ffmpeg.exec([
+        '-i', 'a1.wav', '-i', 'a2.wav',
+        '-filter_complex', 'amix=inputs=2:duration=longest',
+        'output.wav'
+      ])
+      const data = await this.ffmpeg.readFile('output.wav')
+      return new Blob([data], { type: 'audio/wav' })
+    }
+
+    throw new Error('내보낼 활성 트랙이 없습니다')
   }
 }
 

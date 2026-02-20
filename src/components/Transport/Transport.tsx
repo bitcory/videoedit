@@ -1,12 +1,4 @@
-import {
-  Play,
-  Pause,
-  SkipBack,
-  SkipForward,
-  Square,
-  Volume2,
-  VolumeX
-} from 'lucide-react'
+import { Play, Pause, Square, Volume2, VolumeX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
 import { usePlaybackStore } from '../../store/playbackStore'
@@ -15,34 +7,31 @@ import { formatTime } from '../../utils/videoUtils'
 
 export default function Transport() {
   const { isPlaying, currentTime, volume, togglePlay, stop, setCurrentTime, setVolume } = usePlaybackStore()
-  const { getProjectDuration, clips } = useProjectStore()
+  const { phase, getDuration } = useProjectStore()
 
-  const duration = clips.length > 0 ? clips[0].duration : 0
-  const projectDuration = getProjectDuration() || duration
+  const duration = getDuration()
 
-  const handleSkipBack = () => {
-    setCurrentTime(Math.max(0, currentTime - 5))
-  }
-
-  const handleSkipForward = () => {
-    setCurrentTime(Math.min(projectDuration, currentTime + 5))
+  if (phase !== 'ready' && phase !== 'exporting') {
+    return null
   }
 
   return (
-    <div className="bg-[#0d0d0d] border-t border-white/10 p-2 sm:p-3">
-      <div className="flex items-center gap-2 sm:gap-4 flex-wrap justify-center sm:justify-start">
-        {/* 재생 컨트롤 */}
-        <div className="flex items-center gap-1 sm:gap-2">
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8 sm:h-9 sm:w-9"
-            onClick={handleSkipBack}
-            title="5초 뒤로"
-          >
-            <SkipBack className="h-4 w-4" />
-          </Button>
+    <div className="bg-[#0d0d0d] border-t border-white/10 px-2 py-1.5 sm:p-3 safe-area-bottom">
+      {/* 시크바 - 모바일에서 상단 배치 */}
+      <div className="mb-1.5 sm:hidden">
+        <Slider
+          min={0}
+          max={duration || 100}
+          step={0.01}
+          value={[currentTime]}
+          onValueChange={([value]) => setCurrentTime(value)}
+          className="touch-pan-x"
+        />
+      </div>
 
+      <div className="flex items-center gap-2 sm:gap-4">
+        {/* 재생 컨트롤 */}
+        <div className="flex items-center gap-1">
           <Button
             variant="memphis"
             size="icon"
@@ -60,38 +49,31 @@ export default function Transport() {
             onClick={stop}
             title="정지"
           >
-            <Square className="h-4 w-4" />
-          </Button>
-
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8 sm:h-9 sm:w-9"
-            onClick={handleSkipForward}
-            title="5초 앞으로"
-          >
-            <SkipForward className="h-4 w-4" />
+            <Square className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
         </div>
 
         {/* 시간 표시 */}
-        <div className="px-3 py-1.5 bg-[#1a1a1a] border border-white/20 font-mono text-sm font-bold shadow-[2px_2px_0_0_rgba(255,255,255,0.1)] text-white">
+        <div className="px-2 sm:px-3 py-1 sm:py-1.5 bg-[#1a1a1a] border border-white/20 font-mono text-xs sm:text-sm font-bold shadow-[2px_2px_0_0_rgba(255,255,255,0.1)] text-white whitespace-nowrap">
           <span>{formatTime(currentTime)}</span>
-          <span className="mx-2 text-white/30">/</span>
-          <span className="text-white/50">{formatTime(projectDuration)}</span>
+          <span className="mx-1 sm:mx-2 text-white/30">/</span>
+          <span className="text-white/50">{formatTime(duration)}</span>
         </div>
 
-        {/* 시크바 */}
-        <div className="flex-1 min-w-[120px] sm:min-w-[200px] order-last sm:order-none w-full sm:w-auto mt-2 sm:mt-0">
+        {/* 시크바 - 데스크탑 */}
+        <div className="hidden sm:flex flex-1 min-w-[200px]">
           <Slider
             min={0}
-            max={projectDuration || 100}
+            max={duration || 100}
             step={0.01}
             value={[currentTime]}
             onValueChange={([value]) => setCurrentTime(value)}
             className="touch-pan-x"
           />
         </div>
+
+        {/* 모바일 스페이서 */}
+        <div className="flex-1 sm:hidden" />
 
         {/* 볼륨 컨트롤 - 데스크탑 */}
         <div className="hidden sm:flex items-center gap-2">
@@ -118,7 +100,7 @@ export default function Transport() {
         <Button
           variant="ghost"
           size="icon"
-          className="sm:hidden h-8 w-8 text-white/70"
+          className="sm:hidden h-10 w-10 text-white/70 active:text-white"
           onClick={() => setVolume(volume > 0 ? 0 : 1)}
         >
           {volume > 0 ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
