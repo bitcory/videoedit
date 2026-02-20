@@ -1,4 +1,4 @@
-import { Loader2, AudioWaveform } from 'lucide-react'
+import { AudioWaveform } from 'lucide-react'
 import { useProjectStore } from '../../store/projectStore'
 
 export default function SeparationProgress() {
@@ -31,14 +31,16 @@ export default function SeparationProgress() {
           </div>
           <div className="h-2 sm:h-2.5 rounded-full bg-white/[0.06] overflow-hidden">
             <div
-              className="h-full rounded-full gradient-primary transition-all duration-300 ease-out shadow-[0_0_12px_rgba(99,102,241,0.4)]"
+              className="h-full rounded-full gradient-primary transition-all duration-500 ease-out shadow-[0_0_12px_rgba(99,102,241,0.4)] relative overflow-hidden"
               style={{ width: `${separationProgress}%` }}
-            />
+            >
+              <div className="absolute inset-0 animate-progress-shine" />
+            </div>
           </div>
         </div>
 
         <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-          <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin text-primary flex-shrink-0" />
+          <div className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 border-white/10 border-t-primary animate-spin flex-shrink-0" />
           <span className="truncate">{separationMessage || '준비 중...'}</span>
         </div>
 
