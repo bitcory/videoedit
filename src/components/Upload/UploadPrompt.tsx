@@ -63,10 +63,9 @@ export default function UploadPrompt({ onFileSelected }: UploadPromptProps) {
         <Button
           variant="default"
           size="lg"
-          className="h-11 sm:h-12 px-6 sm:px-8"
           onClick={() => fileInputRef.current?.click()}
         >
-          <Upload className="h-4 w-4 mr-2" />
+          <Upload className="h-4 w-4" />
           파일 선택
         </Button>
 
