@@ -3,8 +3,11 @@ import { Upload, Download, Loader2, AudioWaveform } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useProjectStore } from '../../store/projectStore'
+import { usePlaybackStore } from '../../store/playbackStore'
 import { videoEngine } from '../../video/VideoEngine'
 import { getVideoMetadata, generateThumbnails, generateId } from '../../utils/videoUtils'
+
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
 
 export default function Header() {
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -34,7 +37,12 @@ export default function Header() {
         thumbnails,
       }])
 
-      setPhase('separating')
+      if (isMobile) {
+        usePlaybackStore.getState().stop()
+        setPhase('ready')
+      } else {
+        setPhase('separating')
+      }
     } catch (err) {
       console.error('비디오 로드 실패:', err)
       setPhase('empty')

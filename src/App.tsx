@@ -11,6 +11,8 @@ import { videoEngine } from './video/VideoEngine'
 import { stemSeparator, type StemProgress } from './audio/StemSeparator'
 import { getVideoMetadata, generateThumbnails, generateId } from './utils/videoUtils'
 
+const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+
 function App() {
   const videoRef = useRef<HTMLVideoElement>(null)
   const { phase, setPhase, setVideo, setTracks, setSeparationProgress, videoFile } = useProjectStore()
@@ -166,7 +168,13 @@ function App() {
         thumbnails,
       }])
 
-      setPhase('separating')
+      if (isMobile) {
+        // 모바일: 음원 분리 건너뛰고 바로 편집 화면
+        usePlaybackStore.getState().stop()
+        setPhase('ready')
+      } else {
+        setPhase('separating')
+      }
     } catch (err) {
       console.error('비디오 로드 실패:', err)
       alert('비디오를 로드할 수 없습니다: ' + (err instanceof Error ? err.message : '지원하지 않는 형식일 수 있습니다'))
