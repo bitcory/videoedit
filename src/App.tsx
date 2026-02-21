@@ -157,6 +157,7 @@ function App() {
       setPhase('separating')
     } catch (err) {
       console.error('비디오 로드 실패:', err)
+      alert('비디오를 로드할 수 없습니다: ' + (err instanceof Error ? err.message : '지원하지 않는 형식일 수 있습니다'))
       setPhase('empty')
     }
   }
