@@ -123,8 +123,20 @@ function App() {
       } catch (err) {
         if (cancelled) return
         console.error('음원 분리 실패:', err)
-        alert('음원 분리에 실패했습니다: ' + (err instanceof Error ? err.message : ''))
-        setPhase('empty')
+        const msg = err instanceof Error ? err.message : ''
+        const keepVideo = confirm(`음원 분리에 실패했습니다: ${msg}\n\n음원 분리 없이 영상만 사용하시겠습니까?`)
+        if (keepVideo) {
+          const currentTracks = useProjectStore.getState().tracks
+          const videoTrack = currentTracks.find(t => t.type === 'video')
+          if (videoTrack) {
+            setTracks([videoTrack])
+            setPhase('ready')
+          } else {
+            setPhase('empty')
+          }
+        } else {
+          setPhase('empty')
+        }
       }
     }
 

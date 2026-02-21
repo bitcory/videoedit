@@ -1,4 +1,5 @@
-import { AudioWaveform } from 'lucide-react'
+import { AudioWaveform, SkipForward } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import { useProjectStore } from '../../store/projectStore'
 
 export default function SeparationProgress() {
@@ -10,6 +11,16 @@ export default function SeparationProgress() {
     if (separationProgress < 90) return '3/4 음원 분리'
     return '4/4 인코딩'
   })()
+
+  const handleSkip = () => {
+    const store = useProjectStore.getState()
+    const tracks = store.tracks
+    const videoTrack = tracks.find(t => t.type === 'video')
+    if (videoTrack) {
+      store.setTracks([videoTrack])
+    }
+    store.setPhase('ready')
+  }
 
   return (
     <div className="flex-1 flex items-center justify-center p-4 sm:p-8">
@@ -44,9 +55,20 @@ export default function SeparationProgress() {
           <span className="truncate">{separationMessage || '준비 중...'}</span>
         </div>
 
-        <p className="text-[10px] sm:text-xs text-muted-foreground/40 mt-4">
-          처리 중에는 페이지를 닫지 마세요
-        </p>
+        <div className="flex items-center justify-between mt-4">
+          <p className="text-[10px] sm:text-xs text-muted-foreground/40">
+            처리 중에는 페이지를 닫지 마세요
+          </p>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleSkip}
+            className="text-xs text-muted-foreground hover:text-foreground"
+          >
+            <SkipForward className="h-3.5 w-3.5" />
+            건너뛰기
+          </Button>
+        </div>
       </div>
     </div>
   )

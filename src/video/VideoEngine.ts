@@ -27,16 +27,23 @@ class VideoEngine {
 
       const baseURL = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/esm'
 
-      await this.ffmpeg.load({
-        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
-        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
-      })
+      const loadPromise = (async () => {
+        const coreURL = await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript')
+        const wasmURL = await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm')
+        await this.ffmpeg!.load({ coreURL, wasmURL })
+      })()
+
+      const timeoutPromise = new Promise<never>((_, reject) =>
+        setTimeout(() => reject(new Error('FFmpeg 로딩 시간 초과 (30초)')), 30000)
+      )
+
+      await Promise.race([loadPromise, timeoutPromise])
 
       this.loaded = true
     } catch (error) {
       console.error('FFmpeg 로딩 실패:', error)
       this.ffmpeg = null
-      throw new Error('FFmpeg를 로드할 수 없습니다. 네트워크 연결을 확인해주세요.')
+      throw new Error('FFmpeg를 로드할 수 없습니다: ' + (error instanceof Error ? error.message : '네트워크 연결을 확인해주세요.'))
     } finally {
       this.loading = false
     }
