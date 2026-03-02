@@ -4,11 +4,11 @@ interface ThumbnailStripProps {
 
 export default function ThumbnailStrip({ thumbnails }: ThumbnailStripProps) {
   if (thumbnails.length === 0) {
-    return <div className="w-full h-full rounded-md bg-white/[0.03]" />
+    return <div className="w-full h-full bg-content2" />
   }
 
   return (
-    <div className="w-full h-full flex overflow-hidden rounded-md">
+    <div className="w-full h-full flex overflow-hidden">
       {thumbnails.map((thumb, idx) => (
         <div
           key={idx}

@@ -16,7 +16,7 @@ export default function Transport() {
   }
 
   return (
-    <div className="bg-background/80 backdrop-blur-xl border-t border-white/[0.06] px-3 py-2 sm:px-4 sm:py-2.5 safe-area-bottom">
+    <div className="bg-background border-t-3 border-foreground px-3 py-2 sm:px-4 sm:py-2.5 safe-area-bottom">
       {/* 시크바 - 모바일에서 상단 배치 */}
       <div className="mb-2 sm:hidden">
         <Slider
@@ -41,9 +41,9 @@ export default function Transport() {
         </Button>
 
         {/* 시간 표시 */}
-        <div className="px-3 py-1.5 rounded-lg bg-white/[0.04] border border-white/[0.06] font-mono text-xs sm:text-sm font-medium text-foreground/80 whitespace-nowrap">
-          <span className="text-foreground">{formatTime(currentTime)}</span>
-          <span className="mx-1.5 text-white/20">/</span>
+        <div className="px-3 py-1.5 rounded-md bg-content1 border-3 border-foreground font-mono text-xs sm:text-sm font-bold text-foreground whitespace-nowrap shadow-neo-sm">
+          <span>{formatTime(currentTime)}</span>
+          <span className="mx-1.5 text-foreground/30">/</span>
           <span className="text-muted-foreground">{formatTime(duration)}</span>
         </div>
 
@@ -80,7 +80,7 @@ export default function Transport() {
             onValueChange={([value]) => setVolume(value)}
             className="w-24"
           />
-          <span className="text-xs font-medium text-muted-foreground w-10">{Math.round(volume * 100)}%</span>
+          <span className="text-xs font-bold text-muted-foreground w-10">{Math.round(volume * 100)}%</span>
         </div>
 
         {/* 모바일 볼륨 버튼 */}

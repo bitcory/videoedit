@@ -92,15 +92,15 @@ export default function Header() {
 
   return (
     <TooltipProvider>
-      <header className="bg-background/80 backdrop-blur-xl border-b border-white/[0.06] px-3 py-2 sm:px-4 sm:py-2.5 relative z-50 safe-area-top">
+      <header className="bg-background border-b-3 border-foreground px-3 py-2 sm:px-4 sm:py-2.5 relative z-50 safe-area-top">
         <div className="flex items-center justify-between gap-2">
           {/* 로고 */}
           <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl gradient-primary flex items-center justify-center shadow-lg shadow-indigo-500/20">
-              <AudioWaveform className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-md bg-primary border-3 border-foreground flex items-center justify-center shadow-neo-sm">
+              <AudioWaveform className="w-4 h-4 sm:w-5 sm:h-5 text-primary-foreground" />
             </div>
-            <h1 className="text-sm sm:text-lg font-bold text-foreground tracking-tight truncate">
-              TB <span className="gradient-text">음원분리</span>
+            <h1 className="text-sm sm:text-lg font-black text-foreground tracking-tight truncate uppercase">
+              TB 음원분리
             </h1>
           </div>
 
@@ -141,12 +141,12 @@ export default function Header() {
                     {isExporting ? (
                       <>
                         <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-xs">{Math.round(exportProgress)}%</span>
+                        <span className="text-xs ml-1">{Math.round(exportProgress)}%</span>
                       </>
                     ) : (
                       <>
                         <Download className="h-4 w-4" />
-                        <span className="hidden sm:inline">내보내기</span>
+                        <span className="hidden sm:inline ml-1.5">내보내기</span>
                       </>
                     )}
                   </Button>

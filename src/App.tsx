@@ -194,8 +194,8 @@ function App() {
         {phase === 'uploading' && (
           <div className="flex-1 flex items-center justify-center">
             <div className="flex flex-col items-center gap-4">
-              <div className="w-12 h-12 rounded-full border-2 border-white/10 border-t-indigo-500 animate-spin" />
-              <p className="text-muted-foreground font-medium">영상 준비 중...</p>
+              <div className="w-12 h-12 rounded-none border-3 border-foreground/30 border-t-primary animate-spin" />
+              <p className="text-foreground font-bold">영상 준비 중...</p>
             </div>
           </div>
         )}

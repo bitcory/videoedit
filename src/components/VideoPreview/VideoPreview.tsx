@@ -37,7 +37,7 @@ const VideoPreview = forwardRef<HTMLVideoElement>((_, ref) => {
     }
   }, [currentTime, isPlaying])
 
-  // RAF 루프: 재생 중 60fps로 store 업데이트 (timeupdate 대신)
+  // RAF 루프: 재생 중 60fps로 store 업데이트
   useEffect(() => {
     if (!isPlaying) return
     const video = internalRef.current
@@ -64,7 +64,7 @@ const VideoPreview = forwardRef<HTMLVideoElement>((_, ref) => {
     return () => cancelAnimationFrame(raf)
   }, [isPlaying, duration, pause, setCurrentTime])
 
-  // ended 이벤트 처리 (영상 끝에 도달)
+  // ended 이벤트 처리
   useEffect(() => {
     const video = internalRef.current
     if (!video) return
@@ -89,7 +89,7 @@ const VideoPreview = forwardRef<HTMLVideoElement>((_, ref) => {
       <video
         ref={internalRef}
         src={videoUrl}
-        className="w-full max-h-[35vh] sm:max-h-[50vh] object-contain rounded-xl border border-white/[0.08] shadow-2xl shadow-black/40"
+        className="w-full max-h-[35vh] sm:max-h-[50vh] object-contain rounded-md border-3 border-foreground shadow-neo-lg"
         muted
         playsInline
       />
